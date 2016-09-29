@@ -21,10 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     std::string path = "map.txt";
     map *m = new map();
     m->mapLoader(path, scene);
-    //m->maptester(scene);
-    QGraphicsRectItem *rect = new QGraphicsRectItem();
-    rect->setRect(0,0,10,10);
-    scene->addItem(rect);
+
     QGraphicsView * view = new QGraphicsView(scene);
 
     view->setFixedSize(BOARDER_WIDTH,BOARDER_HEIGHT);

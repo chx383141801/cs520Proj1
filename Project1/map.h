@@ -12,15 +12,13 @@ public:
     ~map();
     int mapCreator();
     void randomSelectHard(node (*array)[160], int row, int column, int amount); // get the 'amount' number ofrandom nodes from given map array
-    int randomSelectHighway(node (*array)[160], int row, int column);
+    int randomSelectHighway(node (*array)[160], int row, int column, int index);
     void randomSelectBlock(node (*array)[160], int row, int column);
     void randomSelectStartAndGoal();
     void mapWriter();
     void mapLoader(std::string path, QGraphicsScene *scene);
-    std::vector<std::string> split(const  std::string& s, const std::string& delim);
+    std::vector<std::string> split(std::string s, std::string delim);
     double rnd1(double *r);
-
-    void maptester(QGraphicsScene *scene);
 
     node (*array)[160];
     std::vector <int> start;
