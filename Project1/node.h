@@ -1,17 +1,15 @@
-#ifndef NODE_H
-#define NODE_H
-
-
+#pragma once
+#include <string>
 class node
 {
 public:
-    node();
-    ~node();
-    int bestNeighborCost(); // return the lowest cost from current node to the neighbor
-    node * bestNeighbor();  // return the pointer of the lowest cost neightbor
+	node();
+	~node();
+	int bestNeighborCost(); // return the lowest cost from current node to the neighbor
+	node * bestNeighbor();  // return the pointer of the lowest cost neightbor
 
-    int weight;
-    char isHighway;
+	char weight;
+	char isHighway;
+	char index;
 };
 
-#endif // NODE_H

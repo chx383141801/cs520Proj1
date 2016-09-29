@@ -2,8 +2,9 @@
 
 node::node()
 {
-    weight = '1';
-    isHighway = 'n';
+	weight = '1';
+	isHighway = 'n';
+	index = '0';
 }
 
 
