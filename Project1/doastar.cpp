@@ -135,8 +135,8 @@ using namespace std;
 		node *startpoint;
 		node *endpoint;
 
-		startpoint = &array[sttpt.first][sttpt.second];
-		endpoint= &array[ndpt.first][ndpt.second];
+		startpoint = &array[sttpt.first-1][sttpt.second-1];
+		endpoint= &array[ndpt.first-1][ndpt.second-1];
 
 		set<node*> openList;
 		set<node*> closedList;
@@ -176,13 +176,13 @@ using namespace std;
 				//	cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
 					if (out.is_open())
 					{
-						out <<"("<< temp->x <<","<< temp->y << ")\n";
+						out <<"("<< temp->x+1 <<","<< temp->y+1 << ")\n";
 					
 						
 					}
 					temp = temp->parent;
 				}
-
+				out << "(" << temp->x + 1 << "," << temp->y + 1 << ")\n";
 				//cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
 
 				out.close();
