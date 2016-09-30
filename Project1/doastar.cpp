@@ -36,7 +36,9 @@ using namespace std;
 	bool doastar::readMap()
 	{
 	//	cout << "read start" << endl;
-		ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map.txt");
+		//ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map.txt");
+		ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map_0.txt");
+
 		if (!in)
 		{
 			cerr << "some errors happened";
@@ -44,16 +46,32 @@ using namespace std;
 		}
 		string str;
 	
-		int count = 0;
+		int countr = 0;//row
 		while (getline(in, str))
 		{
-			if (count++ > 9) {
+			if (countr++ > 10) {
 
+				int countc = 0;//column
 
-				for (int i = 0; i < 160; i++) {
-					array[count - 11][i].weight = str.at(i);
+			//	cout << str << endl;
+
+				for (int i = 0; i<str.size() ; i++) {
+					
+					
+					char ith = str.at(i);
+					if (ith == ',') continue;
+				//	cout << countr - 11 << "," << countc << endl;
+					if (countr - 11 >= 120 || countc >= 160) break;
+					array[countr - 11][countc++].weight = ith;
+					if (ith == 'a' || ith == 'b') i++;
+
+				//	for (int j = 0; j < countc; j++) cout << ith;
+
+					//array[count - 11][i].weight = str.at(i);
 			
 				}
+			//	for (int j = 0; j < countc; j++) cout << array[countr - 11][j].weight;
+			//	cout << endl;
 			}
 		
 		}
@@ -62,12 +80,13 @@ using namespace std;
 			for (int j = 0; j < 160; j++)
 			{
 			//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
-			//cout <<  array[i][j].weight;
+	//		cout <<  array[i][j].weight;
 
 			}
-			//cout << endl;
+	//		cout << endl;
 		}
 
+		//cout << array[0][4].weight;
 
 		//cout << "read end" << endl;
 		return true;
@@ -114,11 +133,11 @@ using namespace std;
 			
 			s=findLowestNode(openList);
 
-			cout << "pop s:(" << s->x << "," << s->y << ")" << endl;
+		//	cout << "pop s:(" << s->x << "," << s->y << ")" << endl;
 
 			if (s == endpoint) {
 
-				cout << "this is the end"<< endl;
+			//	cout << "this is the end"<< endl;
 
 				node* temp = endpoint;
 				while (temp->parent != temp) {
@@ -126,7 +145,7 @@ using namespace std;
 					temp = temp->parent;
 				}
 
-			//	cout << (temp->x, temp->y) << endl;
+				cout << temp->x << "," << temp->y << endl;
 
 				return true;
 			}
@@ -151,7 +170,7 @@ using namespace std;
 					if (array[xCur][yCur].weight == '0') continue;
 				
 					if (xCur >= 0 && xCur < 120 && yCur >= 0 && yCur < 160) {
-						cout <<"x,y:"<< xCur << "," << yCur << ":" << array[xCur][yCur].weight << endl;
+					//	cout <<"x,y:"<< xCur << "," << yCur << ":" << array[xCur][yCur].weight << endl;
 					//	cout << "check:" << xCur << "," << yCur<<endl;
 						node *s_ = &array[xCur][yCur];
 						s_->hN = calHn(s_,endpoint);
@@ -180,7 +199,7 @@ using namespace std;
 							}
 							s_->fN = s_->gN + s_->hN;
 							openList.insert(s_);
-							cout << "this time insert" << s_->x << "," << s_->y<<",gN:"<<s_->gN<<",fN:"<<s_->fN<< endl;
+				//			cout << "this time insert" << s_->x << "," << s_->y<<",gN:"<<s_->gN<<",fN:"<<s_->fN<< endl;
 						//	s->hN = calHn(s, endpoint);
 						//	s_->fN = s_->gN + s_->hN;
 							
@@ -211,7 +230,7 @@ using namespace std;
 	//	cout << "findLN:size before:" << ns.size() << endl;
 		for each (node* n in ns)
 		{
-			cout << "(" << n->x << "," << n->y << "):" << n->fN <<".weight:"<<n->weight <<endl;
+			//cout << "(" << n->x << "," << n->y << "):" << n->fN <<".weight:"<<n->weight <<endl;
 		//	cout << "nfn now:" << n->fN << endl;
 			if (lowest->fN>n->fN){
 				lowest = n;

@@ -11,6 +11,13 @@ public:
     char weight;
     char isHighway;
     char index;
+
+    float fN;//F=G+H
+    float gN;
+    float hN;
+	int x;
+	int y;
+    node *parent;
 };
 
 #endif // NODE_H
