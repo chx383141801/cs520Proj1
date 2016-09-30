@@ -12,11 +12,13 @@ class doastar{
 
 public:
 node (*array)[160];
+pair<int, int> sttpt;
+pair<int, int> ndpt;
 doastar();
 ~doastar();
 
 bool readMap();
-bool findPath(node *startpoint, node *endpoint);
+bool findPath();
 
 node * findLowestNode(set<node*>& ns);
 

@@ -7,12 +7,16 @@ using namespace std;
 #include <fstream>
 #include <iostream>
 #include<set>
+#include <sstream>
 //#include<math>
 #define Maximum 10000
 
 
 	doastar::doastar(){
 		array = new node[120][160];
+		
+		
+
 		for (int i = 0; i < 120; i++)
 		{
 			for (int j = 0; j < 160 ;j++)
@@ -42,6 +46,7 @@ using namespace std;
 		if (!in)
 		{
 			cerr << "some errors happened";
+			in.close();
 			return false;
 		}
 		string str;
@@ -49,6 +54,25 @@ using namespace std;
 		int countr = 0;//row
 		while (getline(in, str))
 		{
+			if (countr==0|| countr == 1)
+			{
+				int x, y;
+				int spps = str.find(" ");
+				stringstream ss;
+				ss<<str.substr(0, spps);
+				ss >> x;
+				ss.clear();
+				ss << str.substr(spps+1, str.size()-1);
+				ss >> y;
+				if (countr == 0) {
+					sttpt.first = x;
+					sttpt.second = y;
+				}
+				else {
+					ndpt.first = x;
+					ndpt.second = y;
+				}
+			}
 			if (countr++ > 10) {
 
 				int countc = 0;//column
@@ -89,12 +113,14 @@ using namespace std;
 		//cout << array[0][4].weight;
 
 		//cout << "read end" << endl;
+		in.close();
+
 		return true;
 	}
 
 	
-	bool doastar::findPath(node *startpoint,node *endpoint)
-	{
+	bool doastar::findPath()
+	{/*
 		for (int i = 0; i < 120; i++)
 		{
 			for (int j = 0; j < 160; j++)
@@ -105,8 +131,12 @@ using namespace std;
 			}
 		//	cout << endl;
 		}
+		*/
+		node *startpoint;
+		node *endpoint;
 
-
+		startpoint = &array[sttpt.first][sttpt.second];
+		endpoint= &array[ndpt.first][ndpt.second];
 
 		set<node*> openList;
 		set<node*> closedList;
@@ -140,13 +170,22 @@ using namespace std;
 			//	cout << "this is the end"<< endl;
 
 				node* temp = endpoint;
+				ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");
+				if (out.is_open()) out <<temp->gN<< "\n";
 				while (temp->parent != temp) {
-					cout << temp->x<<","<< temp->y<< endl;
+				//	cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+					if (out.is_open())
+					{
+						out <<"("<< temp->x <<","<< temp->y << ")\n";
+					
+						
+					}
 					temp = temp->parent;
 				}
 
-				cout << temp->x << "," << temp->y << endl;
+				//cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
 
+				out.close();
 				return true;
 			}
 
