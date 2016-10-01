@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     map.cpp \
+    doastar.cpp \
     node.cpp
 
 HEADERS  += mainwindow.h \
     map.h \
+    doastar.h \
     node.h
 
 FORMS    += mainwindow.ui

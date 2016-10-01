@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
+#include <QColor>
 
 #define random(x)(rand()%x)
 
@@ -222,9 +223,9 @@ void map::randomSelectHard(node (*array)[160], int row, int column, int amount)
         hdCenter.push_back(r);
         hdCenter.push_back(c);
 
-        for (int j = r - 15; j < r + 31; j++)
+        for (int j = r - 15; j < r + 15; j++)
         {
-            for (int k = c - 15; k < c + 31; k++)
+            for (int k = c - 15; k < c + 15; k++)
             {
                 double mark = rnd1(&rnd_2);
                 if (mark >= 0.5)
@@ -340,7 +341,7 @@ void map::mapLoader(std::string path, QGraphicsScene *scene)
     std::vector <std::string> svect;
     std::vector <std::string>::iterator it;
     std::ifstream file;
-    file.open("D:\\Users\\Documents\\Project1\\map_1.txt");
+    file.open(path);
     if (file.is_open())
         std::cout << "file is open" << std::endl;
     else
@@ -382,7 +383,7 @@ void map::mapLoader(std::string path, QGraphicsScene *scene)
             else if (temp == "2")
             {
                 rect->setRect(j * 10, i * 10, 10, 10);
-                rect->setBrush(Qt::gray);
+                rect->setBrush(Qt::darkYellow);
             }
             else if (temp.find("a") != std::string::npos)
             {
@@ -392,7 +393,7 @@ void map::mapLoader(std::string path, QGraphicsScene *scene)
             else if (temp.find("b") != std::string::npos)
             {
                 rect->setRect(j * 10, i * 10, 10, 10);
-                rect->setBrush((Qt::yellow));
+                rect->setBrush(Qt::magenta);
             }
             scene->addItem(rect);
             //delete rect;
@@ -433,6 +434,42 @@ void map::mapLoader(std::string path, QGraphicsScene *scene)
     rect_1->setBrush(Qt::red);
 
     scene->addItem(rect_1);
+    file.close();
+}
+
+void map::mapAndPathLoader(std::string mapDirect, std::string pathDirect, QGraphicsScene *scene)
+{
+    mapLoader(mapDirect, scene);
+    std::ifstream file;
+    file.open(pathDirect);
+    if (file.is_open())
+        std::cout << "path file is open" << std::endl;
+    else
+        std::cout << "file fail to open path file" << std::endl;
+
+    std::string str;
+    std::getline(file, str);
+    double cost = std::stod(str);
+
+    int coordinate_x = 0, coordinate_y = 0;
+
+    while(!file.eof())
+    {
+        std::string recv;
+        std::getline(file, recv);
+        if (recv == "")
+            break;
+        coordinate_x = std::stoi(recv.substr((recv.find('(') + 1), (recv.find(',') - 1)));
+        coordinate_y = std::stoi(recv.substr(recv.find(',') + 1, (recv.find(')') - recv.find(',') - 1)));
+
+        QGraphicsRectItem * rect = new QGraphicsRectItem();
+
+        rect->setRect((coordinate_y) * 10, (coordinate_x) * 10, 10, 10);
+        rect->setBrush(Qt::yellow);
+
+        scene->addItem(rect);
+    }
+    file.close();
 }
 
 void map::randomSelectStartAndGoal()

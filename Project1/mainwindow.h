@@ -17,6 +17,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void on_bt_Create_Map_clicked();
+
+    void on_bt_Load_and_print_clicked();
+
+    void on_bt_run_A_Star_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

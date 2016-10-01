@@ -3,7 +3,6 @@
 
 #include <string>  
 #include <iostream>
-using namespace std;
 #include <fstream>
 #include <iostream>
 #include<set>
@@ -37,28 +36,28 @@ using namespace std;
 	doastar:: ~doastar() {
 	}
 
-	bool doastar::readMap()
+    bool doastar::readMap(std::string path)
 	{
 	//	cout << "read start" << endl;
 		//ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map.txt");
-		ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map_0.txt");
+        std::ifstream in(path);
 
 		if (!in)
 		{
-			cerr << "some errors happened";
+            std::cerr << "some errors happened";
 			in.close();
 			return false;
 		}
-		string str;
+        std::string str;
 	
 		int countr = 0;//row
-		while (getline(in, str))
+        while (std::getline(in, str))
 		{
 			if (countr==0|| countr == 1)
 			{
 				int x, y;
 				int spps = str.find(" ");
-				stringstream ss;
+                std::stringstream ss;
 				ss<<str.substr(0, spps);
 				ss >> x;
 				ss.clear();
@@ -73,7 +72,7 @@ using namespace std;
 					ndpt.second = y;
 				}
 			}
-			if (countr++ > 10) {
+            if (countr++ > 10) {
 
 				int countc = 0;//column
 
@@ -85,8 +84,8 @@ using namespace std;
 					char ith = str.at(i);
 					if (ith == ',') continue;
 				//	cout << countr - 11 << "," << countc << endl;
-					if (countr - 11 >= 120 || countc >= 160) break;
-					array[countr - 11][countc++].weight = ith;
+                    if (countr - 12 >= 120|| countc >= 160) break;
+                    array[countr - 12][countc++].weight = ith;
 					if (ith == 'a' || ith == 'b') i++;
 
 				//	for (int j = 0; j < countc; j++) cout << ith;
@@ -104,7 +103,7 @@ using namespace std;
 			for (int j = 0; j < 160; j++)
 			{
 			//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
-	//		cout <<  array[i][j].weight;
+            std::cout <<  array[i][j].weight;
 
 			}
 	//		cout << endl;
@@ -135,11 +134,11 @@ using namespace std;
 		node *startpoint;
 		node *endpoint;
 
-		startpoint = &array[sttpt.first][sttpt.second];
-		endpoint= &array[ndpt.first][ndpt.second];
+        startpoint = &array[sttpt.first][sttpt.second];
+        endpoint= &array[ndpt.first][ndpt.second];
 
-		set<node*> openList;
-		set<node*> closedList;
+        std::set<node*> openList;
+        std::set<node*> closedList;
 		openList.clear();
 		closedList.clear();
 		
@@ -170,20 +169,20 @@ using namespace std;
 			//	cout << "this is the end"<< endl;
 
 				node* temp = endpoint;
-				ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");
+                std::ofstream out("D:\\Users\\Documents\\build-Project1-Desktop_Qt_5_6_1_MSVC2015_64bit-Debug\\path.txt");
 				if (out.is_open()) out <<temp->gN<< "\n";
 				while (temp->parent != temp) {
-				cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+				//	cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
 					if (out.is_open())
 					{
-						out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
+                        out <<"("<< temp->x<<","<< temp->y<< ")\n";
 					
 						
 					}
 					temp = temp->parent;
 				}
-				out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
-				cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
+                out << "(" << temp->x<< "," << temp->y<< ")\n";
+				//cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
 
 				out.close();
 				return true;
@@ -206,9 +205,10 @@ using namespace std;
 					//cout <<xCur<<endl;
 					//cout << i << "," << j << endl;
 					//cout << "check:" << xCur << "," << yCur <<","<< array[xCur][yCur].weight<<endl;
-					if (array[xCur][yCur].weight == '0') continue;
+
 				
 					if (xCur >= 0 && xCur < 120 && yCur >= 0 && yCur < 160) {
+                        if (array[xCur][yCur].weight == '0') continue;
 					//	cout <<"x,y:"<< xCur << "," << yCur << ":" << array[xCur][yCur].weight << endl;
 					//	cout << "check:" << xCur << "," << yCur<<endl;
 						node *s_ = &array[xCur][yCur];
@@ -263,7 +263,7 @@ using namespace std;
 
 	}
 
-	node *doastar::findLowestNode(set<node*> &ns) {
+    node *doastar::findLowestNode(std::set<node*> &ns) {
 		node * lowest=new node();
 		lowest->fN = 100000;
 	//	cout << "findLN:size before:" << ns.size() << endl;
@@ -283,9 +283,7 @@ using namespace std;
 
 
 	float doastar::calHn(node *cur, node *des) {	//calculate the Hn
-
-
-		return abs(des->x - cur->x) + abs(des->y - cur->y);
+        return std::abs(des->x - cur->x) + std::abs(des->y - cur->y);
 	}
 
 	float doastar::calC(node *cur, node *next) {	//calculate the C(s,s`)
@@ -299,7 +297,7 @@ using namespace std;
 		float distance = Maximum;
 
 		if (cw == '0'|| nw == '0') return Maximum;
-		if (abs(ny - cy) + abs(nx - cx) == 2) {
+        if (std::abs(ny - cy) + std::abs(nx - cx) == 2) {
 			if (cw == '1' || cw == 'a') {
 				if (nw == '1' || nw == 'a') return 1.4;
 				else return 2.1;

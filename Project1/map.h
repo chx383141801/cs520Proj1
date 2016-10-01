@@ -17,6 +17,7 @@ public:
     void randomSelectStartAndGoal();
     void mapWriter();
     void mapLoader(std::string path, QGraphicsScene *scene);
+    void mapAndPathLoader(std::string mapDirect, std::string pathDirect, QGraphicsScene *scene);
     std::vector<std::string> split(std::string s, std::string delim);
     double rnd1(double *r);
 
