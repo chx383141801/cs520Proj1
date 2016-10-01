@@ -135,8 +135,8 @@ using namespace std;
 		node *startpoint;
 		node *endpoint;
 
-		startpoint = &array[sttpt.first-1][sttpt.second-1];
-		endpoint= &array[ndpt.first-1][ndpt.second-1];
+		startpoint = &array[sttpt.first][sttpt.second];
+		endpoint= &array[ndpt.first][ndpt.second];
 
 		set<node*> openList;
 		set<node*> closedList;
@@ -173,17 +173,17 @@ using namespace std;
 				ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");
 				if (out.is_open()) out <<temp->gN<< "\n";
 				while (temp->parent != temp) {
-				//	cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+				cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
 					if (out.is_open())
 					{
-						out <<"("<< temp->x+1 <<","<< temp->y+1 << ")\n";
+						out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
 					
 						
 					}
 					temp = temp->parent;
 				}
-				out << "(" << temp->x + 1 << "," << temp->y + 1 << ")\n";
-				//cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
+				out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
+				cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
 
 				out.close();
 				return true;
