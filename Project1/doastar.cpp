@@ -41,7 +41,7 @@ using namespace std;
 	{
 	//	cout << "read start" << endl;
 		//ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map.txt");
-		ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map_0.txt");
+		ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map_1.txt");
 
 		if (!in)
 		{
@@ -73,11 +73,14 @@ using namespace std;
 					ndpt.second = y;
 				}
 			}
-			if (countr++ > 10) {
 
+			
+
+			if (countr > 10) {
+		//		cout << str << endl;
 				int countc = 0;//column
 
-			//	cout << str << endl;
+				
 
 				for (int i = 0; i<str.size() ; i++) {
 					
@@ -86,7 +89,9 @@ using namespace std;
 					if (ith == ',') continue;
 				//	cout << countr - 11 << "," << countc << endl;
 					if (countr - 11 >= 120 || countc >= 160) break;
+					
 					array[countr - 11][countc++].weight = ith;
+	//				cout << ith ;
 					if (ith == 'a' || ith == 'b') i++;
 
 				//	for (int j = 0; j < countc; j++) cout << ith;
@@ -94,22 +99,36 @@ using namespace std;
 					//array[count - 11][i].weight = str.at(i);
 			
 				}
-			//	for (int j = 0; j < countc; j++) cout << array[countr - 11][j].weight;
-			//	cout << endl;
+		//		cout << endl;
+		//		cout << "asd"<<countr - 11<<endl;
+		//		for (int j = 0; j < countc; j++) cout << array[countr - 11][j].weight;
+		//		cout << endl;
 			}
-		
+			countr++;
 		}
+	/*ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/test.txt");
 		for (int i = 0; i < 120; i++)
 		{
 			for (int j = 0; j < 160; j++)
 			{
-			//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
-	//		cout <<  array[i][j].weight;
+				//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
+				out << array[i][j].weight;
 
 			}
-	//		cout << endl;
+			out << "\n";
 		}
+		out.close();*/
+/*		for (int i = 0; i < 120; i++)
+		{
+			for (int j = 0; j < 160; j++)
+			{
+				//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
+				cout << array[i][j].weight;
 
+			}
+			cout << endl;
+		}
+*/
 		//cout << array[0][4].weight;
 
 		//cout << "read end" << endl;
@@ -132,12 +151,30 @@ using namespace std;
 		//	cout << endl;
 		}
 		*/
+
+
+	/*	for (int i = 0; i < 120; i++)
+		{
+			for (int j = 0; j < 160; j++)
+			{
+				//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
+				cout << array[i][j].weight;
+
+			}
+			cout << endl;
+		}*/
+
+
+
+
+
 		node *startpoint;
 		node *endpoint;
 
 		startpoint = &array[sttpt.first][sttpt.second];
 		endpoint= &array[ndpt.first][ndpt.second];
-
+	//	startpoint = &array[0][0];
+	//	endpoint = &array[0][1];
 		set<node*> openList;
 		set<node*> closedList;
 		openList.clear();
@@ -173,7 +210,7 @@ using namespace std;
 				ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");
 				if (out.is_open()) out <<temp->gN<< "\n";
 				while (temp->parent != temp) {
-				cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+		//		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
 					if (out.is_open())
 					{
 						out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
@@ -183,8 +220,8 @@ using namespace std;
 					temp = temp->parent;
 				}
 				out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
-				cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
-
+	//			cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
+			//	cout << "succcccccccc";
 				out.close();
 				return true;
 			}
