@@ -39,7 +39,12 @@
     bool doastar::readMap(std::string path)
 	{
 	//	cout << "read start" << endl;
+<<<<<<< HEAD
         std::ifstream in(path);
+=======
+		//ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map.txt");
+		ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map_1.txt");
+>>>>>>> origin/master
 
 		if (!in)
 		{
@@ -71,11 +76,18 @@
 					ndpt.second = y;
 				}
 			}
+<<<<<<< HEAD
             if (countr++ > 10) {
+=======
+>>>>>>> origin/master
 
+			
+
+			if (countr > 10) {
+		//		cout << str << endl;
 				int countc = 0;//column
 
-			//	cout << str << endl;
+				
 
 				for (int i = 0; i<str.size() ; i++) {
 					
@@ -83,8 +95,15 @@
 					char ith = str.at(i);
 					if (ith == ',') continue;
 				//	cout << countr - 11 << "," << countc << endl;
+<<<<<<< HEAD
                     if (countr - 12 >= 120|| countc >= 160) break;
                     array[countr - 12][countc++].weight = ith;
+=======
+					if (countr - 11 >= 120 || countc >= 160) break;
+					
+					array[countr - 11][countc++].weight = ith;
+	//				cout << ith ;
+>>>>>>> origin/master
 					if (ith == 'a' || ith == 'b') i++;
 
 				//	for (int j = 0; j < countc; j++) cout << ith;
@@ -92,22 +111,41 @@
 					//array[count - 11][i].weight = str.at(i);
 			
 				}
-			//	for (int j = 0; j < countc; j++) cout << array[countr - 11][j].weight;
-			//	cout << endl;
+		//		cout << endl;
+		//		cout << "asd"<<countr - 11<<endl;
+		//		for (int j = 0; j < countc; j++) cout << array[countr - 11][j].weight;
+		//		cout << endl;
 			}
-		
+			countr++;
 		}
+	/*ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/test.txt");
 		for (int i = 0; i < 120; i++)
 		{
 			for (int j = 0; j < 160; j++)
 			{
+<<<<<<< HEAD
 			//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
             std::cout <<  array[i][j].weight;
+=======
+				//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
+				out << array[i][j].weight;
+>>>>>>> origin/master
 
 			}
-	//		cout << endl;
+			out << "\n";
 		}
+		out.close();*/
+/*		for (int i = 0; i < 120; i++)
+		{
+			for (int j = 0; j < 160; j++)
+			{
+				//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
+				cout << array[i][j].weight;
 
+			}
+			cout << endl;
+		}
+*/
 		//cout << array[0][4].weight;
 
 		//cout << "read end" << endl;
@@ -117,6 +155,7 @@
 	}
 
 	
+<<<<<<< HEAD
     bool doastar::findPath(std::string path)
     {
 		node *startpoint;
@@ -127,6 +166,47 @@
 
         std::set<node*> openList;
         std::set<node*> closedList;
+=======
+	bool doastar::findPath()
+	{/*
+		for (int i = 0; i < 120; i++)
+		{
+			for (int j = 0; j < 160; j++)
+			{
+	//				cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
+		//		cout <<  array[i][j].weight;
+
+			}
+		//	cout << endl;
+		}
+		*/
+
+
+	/*	for (int i = 0; i < 120; i++)
+		{
+			for (int j = 0; j < 160; j++)
+			{
+				//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
+				cout << array[i][j].weight;
+
+			}
+			cout << endl;
+		}*/
+
+
+
+
+
+		node *startpoint;
+		node *endpoint;
+
+		startpoint = &array[sttpt.first][sttpt.second];
+		endpoint= &array[ndpt.first][ndpt.second];
+	//	startpoint = &array[0][0];
+	//	endpoint = &array[0][1];
+		set<node*> openList;
+		set<node*> closedList;
+>>>>>>> origin/master
 		openList.clear();
 		closedList.clear();
 		
@@ -163,7 +243,11 @@
                 std::ofstream out_info(info_path);
 				if (out.is_open()) out <<temp->gN<< "\n";
 				while (temp->parent != temp) {
+<<<<<<< HEAD
 				//	cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+=======
+		//		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+>>>>>>> origin/master
 					if (out.is_open())
 					{
                         out <<"("<< temp->x<<","<< temp->y<< ")\n";	
@@ -175,10 +259,16 @@
                     }
 					temp = temp->parent;
 				}
+<<<<<<< HEAD
                 out << "(" << temp->x<< "," << temp->y<< ")\n";
                 out_info <<"("<< temp->x<<","<< temp->y<< ")" << " " << temp->gN << "," << temp->hN << std::endl;
 				//cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
 
+=======
+				out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
+	//			cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
+			//	cout << "succcccccccc";
+>>>>>>> origin/master
 				out.close();
 				return true;
 			}
