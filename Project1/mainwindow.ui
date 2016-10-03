@@ -82,8 +82,8 @@
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>270</y>
-      <width>113</width>
+      <y>269</y>
+      <width>151</width>
       <height>21</height>
      </rect>
     </property>
@@ -119,12 +119,12 @@
      <rect>
       <x>480</x>
       <y>80</y>
-      <width>91</width>
+      <width>201</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Map name</string>
+     <string>Map base name(without index)</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -145,6 +145,42 @@
      <rect>
       <x>480</x>
       <y>189</y>
+      <width>151</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bt_get_report">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>320</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Get Report</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>320</y>
+      <width>201</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Map base name(without index)</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="le_map_name_2">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>349</y>
       <width>151</width>
       <height>21</height>
      </rect>

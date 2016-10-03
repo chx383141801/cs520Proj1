@@ -25,6 +25,8 @@ private slots:
 
     void on_bt_run_weighted_A_star_clicked();
 
+    void on_bt_get_report_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

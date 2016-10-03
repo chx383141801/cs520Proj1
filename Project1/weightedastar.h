@@ -8,6 +8,7 @@ class weightedAStar : public doastar
 public:
     weightedAStar();
     bool findPath(double weight, std::string path);
+    bool findPath(double weight, double &cost);
     float calHn(node *cur, node *des, double weight);
 };
 

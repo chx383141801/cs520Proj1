@@ -13,6 +13,7 @@
 #include <QMouseEvent>
 #include <QTime>
 #include <string>
+#include <fstream>
 
 #define BOARDER_WIDTH 1600
 #define BOARDER_HEIGHT 1200
@@ -132,4 +133,42 @@ void MainWindow::on_bt_run_weighted_A_star_clicked()
     //this->setCentralWidget(view);
     delete m;
     delete ds;
+}
+
+void MainWindow::on_bt_get_report_clicked()
+{
+    std::ofstream out;
+    std::string report_path = ui->le_map_name_2->text().toStdString();
+    report_path += "_report.txt";
+
+    out.open(report_path);
+    if (out.is_open())
+    {
+        for (int i = 0 ; i < 10 ; i++)
+        {
+            std::string p = ui->le_map_name_2->text().toStdString();
+            p += "_";
+            p += std::to_string(i);
+            p += ".txt";
+            double weight[5] = {0, 1, 0.5, 1.25, 2};
+            std::string type[5] = {"Uniform", "A*     ","w=0.5  ","w=1.25 ","w=2    "};
+            for (int j = 0 ; j < 5 ; j++)
+            {
+                weightedAStar *ds = new weightedAStar();
+                double cost = 0;
+                ds->readMap(p);
+                QTime time;
+                time.start();
+                ds->findPath(weight[j], cost);
+                float timeCost = time.elapsed();
+                out << "-----------------------------------------------------------------" << std::endl;
+                out << "File Name: " << p << std:: endl;
+                out << type[j] << " | " << "cost: " << cost << " | " << "time: " << timeCost << std::endl;
+                delete ds;
+            }
+            out << "-----------------------------------------------------------------" << std::endl;
+
+        }
+    }
+    out.close();
 }

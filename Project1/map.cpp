@@ -209,8 +209,10 @@ int map::randomSelectHighway(node (*array)[160], int row, int column, int index)
 
 void map::randomSelectHard(node (*array)[160], int row, int column, int amount)
 {
-    double rnd_0 = 5.0;
-    double rnd_1 = 6.0;
+    srand(unsigned(time(NULL)));
+    double rnd_0 = random(6);;
+    srand(unsigned(time(NULL) + 1));
+    double rnd_1 = random(5);
     //generate 8 pairs of numbers for 8 nodes
     for (int i = 0; i < amount; i++)
     {
