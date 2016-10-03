@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <utility>
 #include <unordered_map>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
@@ -291,52 +292,73 @@ std::vector <std::string> map::split(std::string s, std::string delim)
     return elems;
 }
 
-void map::mapWriter()
+void map::mapWriter(std::string path)
 {
-    std::ofstream file;
-    file.open("map.txt");
-    std::vector <int>::iterator it;
-    //write start coordinate
-    for (it = start.begin(); it != start.end(); it++)
-        file << *it << ' ';
-    file << std::endl;
-    //write goal coordinate
-    for (it = goal.begin(); it != goal.end(); it++)
-        file << *it << ' ';
-    file << std::endl;
-    int counter = 0;
-    //write hardtotraverse center
-    for (it = hdCenter.begin(); it != hdCenter.end(); it++)
-    {
-        file << *it << ' ';
-        ++counter;
-        if (counter % 2 == 0)
-            file << std::endl;
-    }
+    std::vector <std::pair<int,int>>::iterator it_start = start.begin();
+    std::vector <std::pair<int,int>>::iterator it_goal = goal.begin();
 
-    counter = 0;
-    //write numbers of cells
-    file << 120 << ',' << 160 << std::endl;
-
-    //write 120*160 cells
-    for (int i = 0; i < 120; i++)
+    for (int i = 0 ; i < 10 && it_start != start.end() && it_goal != goal.end(); i++ , it_start++, it_goal++)
     {
-        for (int j = 0; j < 160; j++)
+        std::ofstream file;
+        if (path == "")
         {
-            file << array[i][j].weight;
-            if (array[i][j].weight == 'a' || array[i][j].weight == 'b')
-                file << array[i][j].index;
-            if (j < 159)
-                file << ',';
-            counter++;
-            if (counter % 160 == 0)
+            std::string p = "map_";
+            p += std::to_string(i);
+            p += ".txt";
+            file.open(p);
+        }
+        else
+        {
+            std::string p = path;
+            p += "_";
+            p += std::to_string(i);
+            p += ".txt";
+            file.open(p);
+        }
+
+        //write start coordinate
+        std::pair <int,int> start_p = *it_start;
+        file << start_p.first << ' ' << start_p.second << std::endl;
+
+        //write goal coordinate
+        std::pair <int,int> goal_p = *it_goal;
+        file << goal_p.first << ' ' << goal_p.second << std::endl;
+
+        int counter = 0;
+        std::vector <int>::iterator it;
+        //write hardtotraverse center
+        for (it = hdCenter.begin(); it != hdCenter.end(); it++)
+        {
+            file << *it << ' ';
+            ++counter;
+            if (counter % 2 == 0)
                 file << std::endl;
         }
+
+        counter = 0;
+        //write numbers of cells
+        file << 120 << ',' << 160 << std::endl;
+
+        //write 120*160 cells
+        for (int i = 0; i < 120; i++)
+        {
+            for (int j = 0; j < 160; j++)
+            {
+                file << array[i][j].weight;
+                if (array[i][j].weight == 'a' || array[i][j].weight == 'b')
+                    file << array[i][j].index;
+                if (j < 159)
+                    file << ',';
+                counter++;
+                if (counter % 160 == 0)
+                    file << std::endl;
+            }
+        }
+        file.close();
     }
-    file.close();
 }
 
-void map::mapLoader(std::string path, QGraphicsScene *scene)
+int map::mapLoader(std::string path, QGraphicsScene *scene)
 {
     std::vector <std::string> svect;
     std::vector <std::string>::iterator it;
@@ -345,7 +367,10 @@ void map::mapLoader(std::string path, QGraphicsScene *scene)
     if (file.is_open())
         std::cout << "file is open" << std::endl;
     else
+    {
         std::cout << "file fail to open" << std::endl;
+        return 1;
+    }
 
     std::vector <std::string> strVect;
 
@@ -435,9 +460,10 @@ void map::mapLoader(std::string path, QGraphicsScene *scene)
 
     scene->addItem(rect_1);
     file.close();
+    return 0;
 }
 
-void map::mapAndPathLoader(std::string mapDirect, std::string pathDirect, QGraphicsScene *scene)
+int map::mapAndPathLoader(std::string mapDirect, std::string pathDirect, QGraphicsScene *scene, double &cost)
 {
     mapLoader(mapDirect, scene);
     std::ifstream file;
@@ -445,11 +471,14 @@ void map::mapAndPathLoader(std::string mapDirect, std::string pathDirect, QGraph
     if (file.is_open())
         std::cout << "path file is open" << std::endl;
     else
+    {
         std::cout << "file fail to open path file" << std::endl;
+        return 1;
+    }
 
     std::string str;
     std::getline(file, str);
-    double cost = std::stod(str);
+    cost = std::stod(str);
 
     int coordinate_x = 0, coordinate_y = 0;
 
@@ -470,92 +499,90 @@ void map::mapAndPathLoader(std::string mapDirect, std::string pathDirect, QGraph
         scene->addItem(rect);
     }
     file.close();
+    return 0;
 }
 
 void map::randomSelectStartAndGoal()
-{
-    int direct_h, direct_v;
-    int r = 0, c = 0;
-
+{  
     srand(unsigned(time(NULL)));
-    double rnd_0 = random(15);
-    double rnd_1 = random(17);
-    double mark = rnd1(&rnd_0);
-
-    if (mark >= 0.5)
-        direct_h = 1;	//right
-    else
-        direct_h = 0;	//left
-
-    mark = rnd1(&rnd_1);
-
-    if (mark >= 0.5)
-        direct_v = 4;	//bottom
-    else
-        direct_v = 2;	//top
-
-    switch (direct_h + direct_v)
+    double rnd_0 ;
+    double rnd_1 ;
+    rnd_0 = random(30);
+    rnd_1 = random(26);
+    for (int i = 0 ; i < 10 ; i++)
     {
-        //left top
-    case 2:
-        srand(unsigned(time(NULL)));
-        r = random(19);
-        srand(unsigned(time(NULL)));
-        c = random(19);
-        start.push_back(r);
-        start.push_back(c);
-        srand(unsigned(time(NULL)));
-        r = random(19) + 100;
-        srand(unsigned(time(NULL)));
-        c = random(19) + 140;
-        goal.push_back(r);
-        goal.push_back(c);
-        break;
-        //right top
-    case 3:
-        srand(unsigned(time(NULL)));
-        r = random(19);
-        srand(unsigned(time(NULL)));
-        c = random(19) + 140;
-        start.push_back(r);
-        start.push_back(c);
-        srand(unsigned(time(NULL)));
-        r = random(19) + 100;
-        srand(unsigned(time(NULL)));
-        c = random(19);
-        goal.push_back(r);
-        goal.push_back(c);
-        break;
-        //left bottom
-    case 4:
-        srand(unsigned(time(NULL)));
-        r = random(19) + 100;
-        srand(unsigned(time(NULL)));
-        c = random(19);
-        start.push_back(r);
-        start.push_back(c);
-        srand(unsigned(time(NULL)));
-        r = random(19);
-        srand(unsigned(time(NULL)));
-        c = random(19) + 140;
-        goal.push_back(r);
-        goal.push_back(c);
-        break;
-        //right bottom
-    case 5:
-        srand(unsigned(time(NULL)));
-        r = random(19) + 100;
-        srand(unsigned(time(NULL)));
-        c = random(19) + 140;
-        start.push_back(r);
-        start.push_back(c);
-        srand(unsigned(time(NULL)));
-        r = random(19);
-        srand(unsigned(time(NULL)));
-        c = random(19);
-        goal.push_back(r);
-        goal.push_back(c);
-        break;
-    }
+        int direct_h, direct_v;
+        int r = 0, c = 0;
 
+        double mark = rnd1(&rnd_0);
+        if (mark >= 0.5)
+            direct_h = 1;	//right
+        else
+            direct_h = 0;	//left
+
+        mark = rnd1(&rnd_1);
+
+        if (mark >= 0.5)
+            direct_v = 4;	//bottom
+        else
+            direct_v = 2;	//top
+
+        std::pair<int,int> p1;
+        std::pair<int,int> p2;
+
+        switch (direct_h + direct_v)
+        {
+        //left top
+        case 2:
+            r = (rnd1(&rnd_0) * 100) * 19 / 100;
+            c = (rnd1(&rnd_0) * 100) * 19 / 100;
+            p1 = std::make_pair(r,c);
+            start.push_back(p1);
+
+            r = (rnd1(&rnd_0) * 100) * 19 / 100 + 100;
+            c = (rnd1(&rnd_0) * 100) * 19 / 100 + 140;
+            p2 = std::make_pair(r,c);
+            goal.push_back(p2);
+            break;
+            //right top
+        case 3:
+            r = (rnd1(&rnd_0) * 100) * 19 / 100;
+            c = (rnd1(&rnd_0) * 100) * 19 / 100 + 140;
+            p1 = std::make_pair(r,c);
+            start.push_back(p1);
+            r = (rnd1(&rnd_0) * 100) * 19 / 100 + 100;
+            c = (rnd1(&rnd_0) * 100) * 19 / 100;
+            p2 = std::make_pair(r,c);
+            goal.push_back(p2);
+            break;
+            //left bottom
+        case 4:
+
+            r = (rnd1(&rnd_0) * 100) * 19 / 100 + 100;
+
+            c = (rnd1(&rnd_0) * 100) * 19 / 100;
+            p1 = std::make_pair(r,c);
+            start.push_back(p1);
+
+            r = (rnd1(&rnd_0) * 100) * 19 / 100;
+
+            c = (rnd1(&rnd_0) * 100) * 19 / 100 + 140;
+            p2 = std::make_pair(r,c);
+            goal.push_back(p2);
+            break;
+            //right bottom
+        case 5:
+
+            r = (rnd1(&rnd_0) * 100) * 19 / 100 + 100;
+            c = (rnd1(&rnd_0) * 100) * 19 / 100 + 140;
+            p1 = std::make_pair(r,c);
+            start.push_back(p1);
+
+            r = (rnd1(&rnd_0) * 100) * 19 / 100;
+            c = (rnd1(&rnd_0) * 100) * 19 / 100;
+            p2 = std::make_pair(r,c);
+            goal.push_back(p2);
+            break;
+        }
+    }
 }

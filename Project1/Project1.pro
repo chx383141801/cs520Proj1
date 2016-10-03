@@ -16,14 +16,19 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     map.cpp \
     doastar.cpp \
-    node.cpp
+    node.cpp \
+    weightedastar.cpp \
+    pathdisplay.cpp
 
 HEADERS  += mainwindow.h \
     map.h \
     doastar.h \
-    node.h
+    node.h \
+    weightedastar.h \
+    pathdisplay.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    pathdisplay.ui
 
 DISTFILES += \
     map.txt

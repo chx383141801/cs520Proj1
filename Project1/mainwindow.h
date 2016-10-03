@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include "node.h"
+#include "pathdisplay.h"
 #include <QMainWindow>
 
 namespace Ui {
@@ -22,7 +23,7 @@ private slots:
 
     void on_bt_Load_and_print_clicked();
 
-    void on_bt_run_A_Star_clicked();
+    void on_bt_run_weighted_A_star_clicked();
 
 private:
     Ui::MainWindow *ui;

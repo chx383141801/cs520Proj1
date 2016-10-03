@@ -39,7 +39,6 @@
     bool doastar::readMap(std::string path)
 	{
 	//	cout << "read start" << endl;
-		//ifstream in("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/map.txt");
         std::ifstream in(path);
 
 		if (!in)
@@ -118,19 +117,8 @@
 	}
 
 	
-	bool doastar::findPath()
-	{/*
-		for (int i = 0; i < 120; i++)
-		{
-			for (int j = 0; j < 160; j++)
-			{
-	//				cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
-		//		cout <<  array[i][j].weight;
-
-			}
-		//	cout << endl;
-		}
-		*/
+    bool doastar::findPath(std::string path)
+    {
 		node *startpoint;
 		node *endpoint;
 
@@ -169,19 +157,26 @@
 			//	cout << "this is the end"<< endl;
 
 				node* temp = endpoint;
-                std::ofstream out("D:\\Users\\Documents\\build-Project1-Desktop_Qt_5_6_1_MSVC2015_64bit-Debug\\path.txt");
+                std::ofstream out(path);
+                std::string info_path = path.substr(0,path.find(".txt"));
+                info_path += "_info.txt";
+                std::ofstream out_info(info_path);
 				if (out.is_open()) out <<temp->gN<< "\n";
 				while (temp->parent != temp) {
 				//	cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
 					if (out.is_open())
 					{
-                        out <<"("<< temp->x<<","<< temp->y<< ")\n";
-					
+                        out <<"("<< temp->x<<","<< temp->y<< ")\n";	
 						
 					}
+                    if (out_info.is_open())
+                    {
+                        out_info <<"("<< temp->x<<","<< temp->y<< ")" << " " << temp->gN << "," << temp->hN << std::endl;
+                    }
 					temp = temp->parent;
 				}
                 out << "(" << temp->x<< "," << temp->y<< ")\n";
+                out_info <<"("<< temp->x<<","<< temp->y<< ")" << " " << temp->gN << "," << temp->hN << std::endl;
 				//cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
 
 				out.close();
@@ -271,7 +266,7 @@
 		{
 			//cout << "(" << n->x << "," << n->y << "):" << n->fN <<".weight:"<<n->weight <<endl;
 		//	cout << "nfn now:" << n->fN << endl;
-			if (lowest->fN>n->fN){
+            if (lowest->fN > n->fN){
 				lowest = n;
 		//		cout << "lowest now:" << lowest->fN<<endl;
 			}
