@@ -1,6 +1,6 @@
 #include "doastar.h"
 //#include "coordinate.h"
-
+#include <QDebug>
 #include <string>  
 #include <iostream>
 #include <fstream>
@@ -102,13 +102,13 @@
 			for (int j = 0; j < 160; j++)
 			{
 			//	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
-            std::cout <<  array[i][j].weight;
-
+           // std::cout <<  array[i][j].weight;
+//std::cout << "123123123";
 			}
 	//		cout << endl;
 		}
 
-		//cout << array[0][4].weight;
+  //      std::cout << "123123123";
 
 		//cout << "read end" << endl;
 		in.close();
@@ -121,7 +121,7 @@
     {
 		node *startpoint;
 		node *endpoint;
-
+std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxxx";
         startpoint = &array[sttpt.first][sttpt.second];
         endpoint= &array[ndpt.first][ndpt.second];
 
@@ -129,8 +129,10 @@
         std::set<node*> closedList;
 		openList.clear();
 		closedList.clear();
-		
-
+  //      std::cout<<"888888888888888888888888888888888888888888888888888888888888888888888888"<<std::endl;
+//std::cout<<"888888888888888888888888888888888888888888888888888888888888888888888888"<<std::endl;
+//std::cout<<"888888888888888888888888888888888888888888888888888888888888888888888888"<<std::endl;
+//std::cout<<"888888888888888888888888888888888888888888888888888888888888888888888888"<<std::endl;
 		startpoint->gN = 0;
 		startpoint->hN = calHn(startpoint, endpoint);
 		startpoint->fN = startpoint->gN + startpoint->hN;
@@ -278,7 +280,16 @@
 
 
 	float doastar::calHn(node *cur, node *des) {	//calculate the Hn
-        return std::abs(des->x - cur->x) + std::abs(des->y - cur->y);
+        int dx = std::abs(des->x - cur->x);
+       int dy =  std::abs(des->y - cur->y);
+       //return dy+ dx;
+std::cout<<dx+dy+0.4*(dx<dy?dx:dy)<<std::endl;
+//std::cout<<"888888888888888888888888888888888888888888888888888888888888888888888888"<<std::endl;
+
+
+        return dx+dy+0.4*(dx<dy?dx:dy);
+       //return (dx+dy)*(dx+dy);
+
 	}
 
 	float doastar::calC(node *cur, node *next) {	//calculate the C(s,s`)

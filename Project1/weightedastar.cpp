@@ -12,7 +12,7 @@ weightedAStar::weightedAStar()
 {
 }
 
-bool weightedAStar::findPath(double weight, double &cost)
+bool weightedAStar::findPath(double weight, double &cost,int &nodes,int &closed)
 {
     node *startpoint;
     node *endpoint;
@@ -47,6 +47,12 @@ bool weightedAStar::findPath(double weight, double &cost)
         if (s == endpoint) {
             node* temp = endpoint;
             cost = temp->gN;
+
+            while (temp->parent != temp){
+                temp=temp->parent;
+                nodes++;
+            }
+closed=closedList.size();
             return true;
         }
 
@@ -55,7 +61,7 @@ bool weightedAStar::findPath(double weight, double &cost)
 
         closedList.insert(s);
 
-    //	cout << "closedList.insert(s);" << endl;
+    //    std::cout << closedList.size() << std::endl;
         for (int i = -1; i < 2; i++)
         {
             for (int j = -1; j < 2; j++)
@@ -112,6 +118,7 @@ bool weightedAStar::findPath(double weight, double &cost)
             }
         }
     }
+
     return false;
 }
 
@@ -248,6 +255,13 @@ bool weightedAStar::findPath(double weight, std::string path)
 
 float weightedAStar::calHn(node *cur, node *des, double weight)
 {	//calculate the Hn
-    return weight *(std::abs(des->x - cur->x) + std::abs(des->y - cur->y)) * 0.25 ;
+   // return weight *(std::abs(des->x - cur->x) + std::abs(des->y - cur->y)) * 0.25 ;
+    int dx = std::abs(des->x - cur->x);
+   int dy =  std::abs(des->y - cur->y);
+   //return weight*(dx+dy)/4;
+   //return weight*sqrt(dx*dx+dy*dy);
 
+    //return weight*(dx+dy+0.4*(dx<dy?dx:dy)-0.75*(dx+dy-2*dx<dy?dx:dy));
+   // return weight*(dx+dy-0.6*(dx<dy?dx:dy));
+   return weight*(dx+dy+0.9*(dx<dy?dx:dy));
 }
