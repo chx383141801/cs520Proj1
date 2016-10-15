@@ -21,7 +21,20 @@ public:
 	int y;
     node *parent;
 
-	
+	bool operator<(const node nd) {
+		return (fN < nd.fN);
+	}
+
+	bool operator>(const node nd) {
+		return (fN > nd.fN);
+	}
+
+	bool operator==(const node nd) {
+		return (x == nd.x&&y==nd.y);
+	}
+
 };
+
+
 
 #endif // NODE_H
