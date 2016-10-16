@@ -18,14 +18,19 @@ SOURCES += main.cpp\
     doastar.cpp \
     node.cpp \
     weightedastar.cpp \
-    pathdisplay.cpp
+    pathdisplay.cpp \
+    sequentialheuristics.cpp \
+    integretedheuristics.cpp
 
 HEADERS  += mainwindow.h \
     map.h \
     doastar.h \
     node.h \
     weightedastar.h \
-    pathdisplay.h
+    pathdisplay.h \
+    minihp.h \
+    sequentialheuristics.h \
+    integretedheuristics.h
 
 FORMS    += mainwindow.ui \
     pathdisplay.ui

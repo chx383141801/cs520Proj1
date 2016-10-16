@@ -1,7 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-
 class node
 {
 public:
@@ -20,6 +19,11 @@ public:
 	int x;
 	int y;
     node *parent;
+
+    float g[5];
+    float f[5];
+    float h[5];
+    node *bp[5];
 
 	bool operator<(const node nd) {
 		return (fN < nd.fN);

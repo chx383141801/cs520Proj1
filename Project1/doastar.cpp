@@ -13,29 +13,21 @@
 
 	doastar::doastar(){
 		array = new node[120][160];
-		
-		
-
 		for (int i = 0; i < 120; i++)
 		{
 			for (int j = 0; j < 160 ;j++)
 			{
-
-			//	cout << "hello" << endl;
-			//	array[i, j]->x = i;
-			//	array[i, j]->y = j;
 				array[i][j].x = i;
 				array[i][j].y = j;
 			}
 		}
-
-		//array[119][159].x = 1;
 	}
 
 
 	doastar:: ~doastar() {
 	}
-
+//TODO: Initialize each node coordinate x,y and
+//TODO: Initialize the g[i] with FLT_MAX, bp[i] = NULL
     bool doastar::readMap(std::string path)
 	{
 	//	cout << "read start" << endl;

@@ -1,6 +1,6 @@
 #ifndef WEIGHTEDASTAR_H
 #define WEIGHTEDASTAR_H
-#include <doastar.h>
+#include "doastar.h"
 #include <string>
 
 class weightedAStar : public doastar
