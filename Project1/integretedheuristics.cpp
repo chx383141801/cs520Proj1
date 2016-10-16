@@ -57,7 +57,8 @@ void IntegretedHeuristics::expandState(node &s, node *endpoint, int i, float wei
     std::vector <node*> vect = Succ(s);
     for (it = vect.begin() ; it != vect.end() ; it++)
     {
-        //first if is done if we initialize the gN and parent in readmap
+        //first 'if' is done if we initialize the gN and parent in readmap
+        //TODO: modify or rewrite readmap() function to initialize gN and parent
         node *n = *it;
         if (n->gN > s.gN + calC(&s, n))
         {

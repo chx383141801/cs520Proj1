@@ -59,6 +59,7 @@ void SequentialHeuristics::expandState(node &s, node *endpoint, int i, float wei
     for (it = vect.begin() ; it != vect.end() ; it++)
     {
         //first if is done if we initialize the g and bp in readmap
+        //TODO: modify or rewrite readmap() function to initialize g[i] and bp[i]
         node *n = *it;
         if (n->g[i] > s.g[i] + calC(&s, n))
         {
