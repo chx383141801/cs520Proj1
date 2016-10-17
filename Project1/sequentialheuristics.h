@@ -11,8 +11,8 @@ class SequentialHeuristics : public doastar
 {
 public:
     SequentialHeuristics();
-    minihp <node> open[NUM_OF_HEURISTICS];
-    minihp <node> closed[NUM_OF_HEURISTICS];
+    minihp <node*> open[NUM_OF_HEURISTICS];
+    minihp <node*> closed[NUM_OF_HEURISTICS];
 
     bool findPath(std::string path, float weight1, float weight2);
     std::vector<node *> Succ(node &s); //return successors of node s

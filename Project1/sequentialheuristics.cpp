@@ -12,114 +12,30 @@
 
 SequentialHeuristics::SequentialHeuristics()
 {
- /*   for (int i = 0; i < 120; i++)
-    {
-        for (int j = 0; j < 160 ;j++)
-        {
-             array[i][j].fN=array[i][j].gN=array[i][j].hN=FLT_MAX;
-             for (int k = 0; k < 160 ;k++){
-             array[i][j].f[k]=array[i][j].g[k]=array[i][j].h[k]=FLT_MAX;
-             array[i][j].bp[k]=nullptr;
-             }
-        }
-    }*/
 }
 
 std::vector <node*> SequentialHeuristics::Succ(node &s)
 {
-    int x = s.x;
-    int y = s.y;
     std::vector <node *> ret;
 
-    if (x-1 < 0 || y+1 > 159 || y-1 < 0 || x+1 > 119)
-        return ret;
-    if (x-1 < 0 && y-1 < 0)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x+i][y+1]);
-        }
-        ret.push_back(&array[x+1][y]);
-    }
-    else if (x-1 < 0 && y+1 > 159)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x+i][y-1]);
-        }
-        ret.push_back(&array[x+1][y]);
-    }
-    else if (x-1 < 0 && y-1 >= 0 && y + 1 <=159)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x+i][y+1]);
-            ret.push_back(&array[x+i][y-1]);
-        }
-        ret.push_back(&array[x+1][y]);
-    }
-    else if (y-1 < 0 && x+1 > 119)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x-i][y+1]);
-        }
-        ret.push_back(&array[x-1][y]);
-    }
-    else if (y-1 < 0 && x+1 <= 119 && x-1 >= 0)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x+1][y+i]);
-            ret.push_back(&array[x-1][y+i]);
-        }
-        ret.push_back(&array[x][y+1]);
-    }
-    else if (y+1 > 159 && x+1 > 119)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x-i][y-1]);
-        }
-        ret.push_back(&array[x-1][y]);
-    }
-    else if (x+1 > 159 && y+1 <= 159 && y-1 >= 0)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x-i][y-1]);
-            ret.push_back(&array[x-i][y+1]);
-        }
-        ret.push_back(&array[x-1][y]);
-    }
-    else if (y+1 > 159 && x+1 <= 119 && x-1 >= 0)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x+1][y-i]);
-            ret.push_back(&array[x-1][y-i]);
-        }
-        ret.push_back(&array[x][y-1]);
-    }
-    else if (x-1 < 0 && y+1 > 159)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            ret.push_back(&array[x+i][y-1]);
-        }
-        ret.push_back(&array[x+1][y]);
-    }
-    else
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            ret.push_back(&array[x-1+i][y-1]);
-            ret.push_back(&array[x-1+i][y+1]);
-        }
-        ret.push_back(&array[x-1][y]);
-        ret.push_back(&array[x+1][y]);
-    }
-    return ret;
+     for (int i = -1; i < 2; i++)
+     {
+         for (int j = -1; j < 2; j++)
+         {
+             if (i == 0 && j == 0) continue;
+              int x = s.x + i;
+              int y = s.y + j;
+               std::cout<<"x"<<x<<"y"<<y<<std::endl;
+
+            if (x >= 0 && x < 120 && y >= 0 && y < 160){
+                if (array[x][y].weight != 0)
+                {
+                    ret.push_back(&array[x][y]);
+                }
+            }
+         }
+     }
+     return ret;
 }
 
 //TODO: replace h0-h4 with four different heuristic functions
@@ -153,17 +69,15 @@ void SequentialHeuristics::expandState(node &s, node *endpoint, int i, float wei
     std::vector <node*> vect = Succ(s);
     for (it = vect.begin() ; it != vect.end() ; it++)
     {
-        //first if is done if we initialize the g and bp in readmap
-        //TODO: modify or rewrite readmap() function to initialize g[i] and bp[i]
         node *n = *it;
         if (n->g[i] > s.g[i] + calC(&s, n))
         {
             n->g[i] = s.g[i] + calC(&s, n);
             n->bp[i] = &s;
-            if (closed[i].contains(*n) == false)
+            if (closed[i].contains(n,i) == false)
             {
                 n->f[i] = Key(n,endpoint, i,weight);
-                open[i].insert(*n);
+                open[i].insert(n,i);
             }
         }
     }
@@ -171,8 +85,6 @@ void SequentialHeuristics::expandState(node &s, node *endpoint, int i, float wei
 
 bool SequentialHeuristics::findPath(std::string path, float weight1, float weight2)
 {
-    //float weight1 = 1.0;
-    //float weight2 = 1.0; // TODO: Need to be modified
     node *startpoint;
     node *endpoint;
 
@@ -191,16 +103,16 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
 
         startpoint->f[i] = Key(startpoint, endpoint, i, weight1);
         startpoint->h[i] = startpoint->f[i] - startpoint->g[i];
-        open[i].insert(*startpoint);
+        open[i].insert(startpoint,i);
     }
 
-    while (open[0].size() != 0)
+    while (open[0].size(0) != 0)
     {
         for (int i = 1 ; i < 5 ; i++)
         {
-            if (open[i].peek().f[i] <= weight2 * open[0].peek().f[0])
+            if (open[i].peek(i)->f[i] <= weight2 * open[0].peek(0)->f[0])
             {
-                if (endpoint->g[i] <= open[i].peek().f[i])
+                if (endpoint->g[i] <= open[i].peek(i)->f[i])
                 {
                     if (endpoint->g[i] < FLT_MAX)
                     {
@@ -219,7 +131,7 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
                         if (out.is_open())
                             out <<temp->g[i]<< "\n";
 
-                        while (temp->parent != temp)
+                        while (temp->bp[i] != NULL)
                         {
                             //		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
                             if (out.is_open())
@@ -227,7 +139,7 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
                                 out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
 
                             }
-                            temp = temp->parent;
+                            temp = temp->bp[i];
                             path_len_nodes++;
                         }
                         out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
@@ -239,7 +151,7 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
                         std::ofstream data(data_path, std::ios::app);//save relevant data to file
                         for (int ii=0;ii<5;ii++)
                         {
-                            expanded_nodes+=closed[ii].size();
+                            expanded_nodes+=closed[ii].size(ii);
                         }
 
                         if (data.is_open())
@@ -253,14 +165,14 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
                 }
                 else
                 {
-                    node s = open[i].pop();
-                    expandState(s, endpoint, i, weight1);
-                    closed[i].insert(s);
+                    node *s = open[i].pop(i);
+                    expandState(*s, endpoint, i, weight1);
+                    closed[i].insert(s,i);
                 }
             }
             else
             {
-                if (endpoint->g[0] <= open[0].peek().f[0])
+                if (endpoint->g[0] <= open[0].peek(0)->f[0])
                 {
                     if (endpoint->g[0] < FLT_MAX)
                     {
@@ -275,7 +187,7 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
                         path_len_distance=temp->g[0];
                         if (out.is_open()) out <<temp->g[0]<< "\n";
 
-                        while (temp->parent != temp) {
+                        while (temp->bp[0] != NULL) {
                 //		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
                             if (out.is_open())
                             {
@@ -283,7 +195,7 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
 
 
                             }
-                            temp = temp->parent;
+                            temp = temp->bp[0];
                             path_len_nodes++;
                         }
                         out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
@@ -296,7 +208,7 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
                         data_path += "_data.txt";
                         std::ofstream data(data_path, std::ios::app);//save relevant data to file
                         for (int ii=0;ii<5;ii++){
-                             expanded_nodes+=closed[ii].size();
+                             expanded_nodes+=closed[ii].size(ii);
                         }
                         if (data.is_open())
                         {
@@ -309,9 +221,9 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
                 }
                 else
                     {
-                        node s = open[0].pop();
-                        expandState(s, endpoint, 0, weight1);
-                        closed[0].insert(s);
+                        node *s = open[0].pop(0);
+                        expandState(*s, endpoint, 0, weight1);
+                        closed[0].insert(s,0);
                     }
             }
         }

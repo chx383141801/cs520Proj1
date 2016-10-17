@@ -29,6 +29,8 @@ private slots:
 
     void on_bt_Seq_Heuristic_clicked();
 
+    void on_bt_Inte_Heuristic_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

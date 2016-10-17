@@ -5,39 +5,34 @@
 #include <iostream>
 #include <sstream>
 //#include <math>
+#include "minihp.h"
+
 IntegretedHeuristics::IntegretedHeuristics()
 {
-/*    for (int i = 0; i < 120; i++)
-    {
-        for (int j = 0; j < 160 ;j++)
-        {
-            array[i][j].fN=array[i][j].gN=array[i][j].hN=FLT_MAX;
-             for (int k = 0; k < 160 ;k++){
-             array[i][j].f[k]=array[i][j].g[k]=array[i][j].h[k]=FLT_MAX;
-             array[i][j].bp[k]=nullptr;
-             }
-        }
-    }*/
 }
-
 
 std::vector <node*> IntegretedHeuristics::Succ(node &s)
 {
-    int x = s.x;
-    int y = s.y;
     std::vector <node *> ret;
 
-    if (x-1 < 0 || y+1 > 159)
-        return ret;
+     for (int i = -1; i < 2; i++)
+     {
+         for (int j = -1; j < 2; j++)
+         {
+             if (i == 0 && j == 0) continue;
+              int x = s.x + i;
+              int y = s.y + j;
+               std::cout<<"x"<<x<<"y"<<y<<std::endl;
 
-    for (int i = 0; i < 3; i++)
-    {
-        ret.push_back(&array[x-1+i][y-1]);
-        ret.push_back(&array[x-1+i][y+1]);
-    }
-    ret.push_back(&array[x-1][y]);
-    ret.push_back(&array[x+1][y]);
-    return ret;
+            if (x >= 0 && x < 120 && y >= 0 && y < 160){
+                if (array[x][y].weight != 0)
+                {
+                    ret.push_back(&array[x][y]);
+                }
+            }
+         }
+     }
+     return ret;
 }
 
 float IntegretedHeuristics::Key(node *s, node* endpoint, int i, float weight) // Need to be done!
@@ -69,27 +64,34 @@ void IntegretedHeuristics::expandState(node &s, node *endpoint, int i, float wei
 {
     std::vector <node*>::iterator it;
     std::vector <node*> vect = Succ(s);
+    for (int i = 0 ; i < 5 ; i++)
+    {
+        if (open[i].contains(&s,i) == true)
+        {
+            open[i].erase(&s,i);
+        }
+    }
     for (it = vect.begin() ; it != vect.end() ; it++)
     {
-        //first 'if' is done if we initialize the gN and parent in readmap
-        //TODO: modify or rewrite readmap() function to initialize gN and parent
         node *n = *it;
         if (n->gN > s.gN + calC(&s, n))
         {
             n->gN = s.gN + calC(&s, n);
             n->parent = &s;
-            if (closed_anchor.contains(*n) == false)
+            if (closed_anchor.contains(n) == false)
             {
                 n->f[0] = Key(n,endpoint, 0,weight1);
-                open[0].insert(*n);
-                if (closed_inad.contains(*n) == false)
+                open[0].insert(n,0);
+                if (closed_inad.contains(n) == false)
                 {
                     for (int i = 1 ; i < 5; i++)
                     {
+                        float t1 = Key(n,endpoint, i,weight1);
+                        float t2 = weight2 * Key(n, endpoint, 0,weight1);
                         if (Key(n,endpoint, i,weight1) <= weight2 * Key(n, endpoint, 0,weight1))
                         {
                             n->f[i] = Key(n,endpoint, i,weight1);
-                            open[i].insert(*n);
+                            open[i].insert(n,i);
                         }
                     }
                 }
@@ -119,83 +121,109 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
 
         startpoint->f[i] = Key(startpoint, endpoint, i, weight1);
         startpoint->h[i] = startpoint->f[i] - startpoint->g[i];
-        open[i].insert(*startpoint);
+        open[i].insert(startpoint,i);
     }
 
     closed_anchor.clear();
     closed_inad.clear();
 
-    while (open[0].size() != 0)
+    while (open[0].size(0) != 0)
     {
         for (int i = 1 ; i < 5 ; i++)
         {
-            if (open[i].peek().f[i] <= weight2 * open[0].peek().f[0])
+            if (open[i].size(i) > 0 && open[i].peek(i)->f[i] <= weight2 * open[0].peek(0)->f[0])
             {
-                if (endpoint->gN <= open[i].peek().f[i])
+                if (endpoint->gN <= open[i].peek(i)->f[i])
                 {
                     if (endpoint->gN < FLT_MAX)
                     {
-                        //TODO: terminate and return path and write file
+                        node* temp = endpoint;
+                        std::ofstream out(path);//save the path to file
 
-                                        node* temp = endpoint;
-                                        std::ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");//save the path to file
+                        int path_len_nodes=1;
+                        int path_len_distance;
+                        int expanded_nodes=0;
 
-                                        int path_len_nodes=1;
-                                        int path_len_distance;
-                                        int expanded_nodes=0;
+                        path_len_distance=temp->gN;
+                        if (out.is_open()) out <<temp->gN<< "\n";
 
-                                         path_len_distance=temp->gN;
-                                        if (out.is_open()) out <<temp->gN<< "\n";
+                        while (temp->parent != NULL) {
+                            //		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+                            if (out.is_open())
+                            {
+                                out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
+                            }
+                            temp = temp->parent;
+                            path_len_nodes++;
+                        }
+                        out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
 
-                                        while (temp->parent != temp) {
-                                //		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
-                                            if (out.is_open())
-                                            {
-                                                out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
+                        out.close();
+                        std::string data_path = path.substr(0,path.find(".txt"));
+                        data_path += "_data.txt";
+                        std::ofstream data(data_path, std::ios::app);//save relevant data to file
+                        expanded_nodes=closed_anchor.size()+closed_inad.size();
+                        if (data.is_open())
+                        {
+                            out <<temp->gN<< "\n";
+                            data<<path_len_distance<<","<<path_len_nodes<<","<<expanded_nodes<<"\n";
+                        }
 
-
-                                            }
-                                            temp = temp->parent;
-                                            path_len_nodes++;
-                                        }
-                                        out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
-                            //			cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
-                            //            cout<< temp->gN << endl;
-                            //            cout << "succcccccccc";
-                                        out.close();
-
-
-                                        std::ofstream data("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/data.txt", std::ios::app);//save relevant data to file
-                                        expanded_nodes=closed_anchor.size()+closed_inad.size();
-                                        if (data.is_open()) out <<temp->gN<< "\n";
-                                        data<<path_len_distance<<","<<path_len_nodes<<","<<expanded_nodes<<"\n";
-
+                        data.close();
                         return true;
-                    }
-                }
+                    }                }
                 else
                     {
-                        node s = open[i].pop();
-                        expandState(s, endpoint, i, weight1, weight2);
-                        closed_inad.insert(s);
+                        node *s = open[i].pop(i);
+                        expandState(*s, endpoint, i, weight1, weight2);
+                        closed_inad.insert(s,i);
                     }
             }
             else
             {
-                if (endpoint->gN <= open[0].peek().f[0])
+                if (endpoint->gN <= open[0].peek(0)->f[0])
                 {
                     if (endpoint->gN < FLT_MAX)
                     {
-                        //TODO: terminate and return path and write file
+                        node* temp = endpoint;
+                        std::ofstream out(path);//save the path to file
+
+                        int path_len_nodes=1;
+                        int path_len_distance;
+                        int expanded_nodes=0;
+
+                        path_len_distance=temp->gN;
+                        if (out.is_open()) out <<temp->gN<< "\n";
+
+                        while (temp->parent != NULL) {
+                            if (out.is_open())
+                            {
+                                out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
+                            }
+                            temp = temp->parent;
+                            path_len_nodes++;
+                        }
+                        out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
+
+                        out.close();
+
+                        std::string data_path = path.substr(0,path.find(".txt"));
+                        data_path += "_data.txt";
+                        std::ofstream data(data_path, std::ios::app);//save relevant data to file
+                        expanded_nodes=closed_anchor.size()+closed_inad.size();
+                        if (data.is_open()) out <<temp->gN<< "\n";
+                        data<<path_len_distance<<","<<path_len_nodes<<","<<expanded_nodes<<"\n";
+
+                        return true;
 
                          return true;
                     }
                 }
                 else
                 {
-                    node s = open[0].pop();
-                    expandState(s, endpoint, 0, weight1, weight2);
-                    closed_anchor.insert(s);
+                    node *s = open[0].pop(0);
+                    expandState(*s, endpoint, 0, weight1, weight2);
+                    closed_anchor.insert(s,0);
                 }
             }
         }
@@ -203,7 +231,6 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
 return false;
 }
 
-//TODO: replace 1.0 with those 5 heuristic functions
 float IntegretedHeuristics::calHn(node *cur, node *des, float weight)
 {
     //return weight * 1.0;

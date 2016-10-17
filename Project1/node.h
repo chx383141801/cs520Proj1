@@ -25,16 +25,16 @@ public:
     float h[5];
     node *bp[5];
 
-	bool operator<(const node nd) {
-		return (fN < nd.fN);
+    bool operator<(const node *nd) {
+        return (fN < nd->fN);
 	}
 
-	bool operator>(const node nd) {
-		return (fN > nd.fN);
+    bool operator>(const node *nd) {
+        return (fN > nd->fN);
 	}
 
-	bool operator==(const node nd) {
-		return (x == nd.x&&y==nd.y);
+    bool operator==(const node *nd) {
+        return (x == nd->x&&y==nd->y);
 	}
 
 };

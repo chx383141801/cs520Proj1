@@ -10,9 +10,9 @@ class IntegretedHeuristics : public doastar
 {
 public:
     IntegretedHeuristics();
-    minihp <node> open[NUM_OF_HEURISTICS];
-    minihp <node> closed_anchor;
-    minihp <node> closed_inad;
+    minihp <node*> open[NUM_OF_HEURISTICS];
+    minihp <node*> closed_anchor;
+    minihp <node*> closed_inad;
 
     bool findPath(std::string path, float weight1, float weight2);
     std::vector<node *> Succ(node &s); //return successors of node s
