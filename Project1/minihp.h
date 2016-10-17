@@ -1,7 +1,7 @@
 #ifndef MINIHP_H
 #define MINIHP_H
 
-
+#include <iostream>
 #include <vector>
 template <typename T> 
 class minihp{
@@ -64,11 +64,11 @@ inline void minihp<T>::insert(T &t1)
 template<typename T>
 inline bool minihp<T>::contains(T &t1)
 {
-    for (size_t i = queue.begin	; i != queue.end; ++i)
+    for (std::vector<T>::iterator  i = queue.begin()		; i != queue.end(); ++i)
     {
-        if (queue[i] == ti) return true;
-	}
-	return false;
+        if (*i == t1) return true;
+    }
+    return false;
 }
 
 template<typename T>
@@ -137,39 +137,48 @@ inline int minihp<T>::size()
 template<typename T>
 inline T minihp<T>::pop()
 {
-/*	//if (queue.size() == 0) return _Nil;
-	T res = queue[0];
-	queue[0] = queue[queue.size() - 1];
-	queue.erase(queue.begin() + queue.size() - 1);
-int 	i = 0;
-	while ((2 * (i + 1) - 1 < queue.size() && queue[i] > queue[2 * (i + 1) - 1]) ||
-		(2 * (i + 1) < queue.size() && queue[i] > queue[2 * (i + 1)])) {
-		cout << "i:" << i << "," << endl;
-		if (2 * (i + 1) < queue.size()) {
-			//	queue.swap(i,queue[2 * (i + 1)-1]<queue[2 * (i + 1)]? 2 * (i + 1) - 1: 2 * (i + 1) );
 
-			T temp;
-			temp = queue[i];
-			int j = queue[2 * (i + 1) - 1] < queue[2 * (i + 1)] ? 2 * (i + 1) - 1 : 2 * (i + 1);
-			queue[i] = queue[j];
-			queue[j] = temp;
-			i = j;
-
-		}
-		else {
-			//queue.swap(i, 2 * (i + 1) - 1);
-			T temp;
-			temp = queue[i];
-			queue[i] = queue[2 * (i + 1) - 1];
-			queue[2 * (i + 1) - 1] = temp;
-			i = 2 * (i + 1) - 1;
-		}
-	}
-	*/
+if(queue.size()==0){
+    std::cout<<"cannot pop"<<std::endl;
+    T res;
+    return  res;
+}
 	T res = queue[0];
 	queue[0] = queue[queue.size() - 1];
 	minihp<T>::erase(queue[queue.size() - 1]);
 	return res;
+
+
+
+    /*	//if (queue.size() == 0) return _Nil;
+        T res = queue[0];
+        queue[0] = queue[queue.size() - 1];
+        queue.erase(queue.begin() + queue.size() - 1);
+    int 	i = 0;
+        while ((2 * (i + 1) - 1 < queue.size() && queue[i] > queue[2 * (i + 1) - 1]) ||
+            (2 * (i + 1) < queue.size() && queue[i] > queue[2 * (i + 1)])) {
+            cout << "i:" << i << "," << endl;
+            if (2 * (i + 1) < queue.size()) {
+                //	queue.swap(i,queue[2 * (i + 1)-1]<queue[2 * (i + 1)]? 2 * (i + 1) - 1: 2 * (i + 1) );
+
+                T temp;
+                temp = queue[i];
+                int j = queue[2 * (i + 1) - 1] < queue[2 * (i + 1)] ? 2 * (i + 1) - 1 : 2 * (i + 1);
+                queue[i] = queue[j];
+                queue[j] = temp;
+                i = j;
+
+            }
+            else {
+                //queue.swap(i, 2 * (i + 1) - 1);
+                T temp;
+                temp = queue[i];
+                queue[i] = queue[2 * (i + 1) - 1];
+                queue[2 * (i + 1) - 1] = temp;
+                i = 2 * (i + 1) - 1;
+            }
+        }
+        */
 }
 
 //TODO: write a function which only peek the top of queue without dequeue it
@@ -177,6 +186,14 @@ template<typename T>
 inline T minihp<T>::peek()
 {
 
+    if(queue.size()==0){
+        std::cout<<"cannot peek"<<std::endl;
+        T res;
+        return  res;
+    }
+    T res = queue[0];
+
+    return res;
 }
 
 #endif 

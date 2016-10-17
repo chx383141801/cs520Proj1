@@ -1,6 +1,10 @@
 #include "integretedheuristics.h"
 #include <limits.h>
-
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+//#include <math>
 IntegretedHeuristics::IntegretedHeuristics()
 {
 }
@@ -25,7 +29,6 @@ std::vector <node*> IntegretedHeuristics::Succ(node &s)
     return ret;
 }
 
-//TODO: replace h0-h4 with four different heuristic functions
 float IntegretedHeuristics::Key(node *s, node* endpoint, int i, float weight) // Need to be done!
 {
     if (i == 0)
@@ -121,6 +124,41 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
                     if (endpoint->gN < FLT_MAX)
                     {
                         //TODO: terminate and return path and write file
+
+                                        node* temp = endpoint;
+                                        std::ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");//save the path to file
+
+                                        int path_len_nodes=1;
+                                        int path_len_distance;
+                                        int expanded_nodes=0;
+
+                                         path_len_distance=temp->gN;
+                                        if (out.is_open()) out <<temp->gN<< "\n";
+
+                                        while (temp->parent != temp) {
+                                //		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+                                            if (out.is_open())
+                                            {
+                                                out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
+
+
+                                            }
+                                            temp = temp->parent;
+                                            path_len_nodes++;
+                                        }
+                                        out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
+                            //			cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
+                            //            cout<< temp->gN << endl;
+                            //            cout << "succcccccccc";
+                                        out.close();
+
+
+                                        std::ofstream data("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/data.txt", std::ios::app);//save relevant data to file
+                                        expanded_nodes=closed_anchor.size()+closed_inad.size();
+                                        if (data.is_open()) out <<temp->gN<< "\n";
+                                        data<<path_len_distance<<","<<path_len_nodes<<","<<expanded_nodes<<"\n";
+
+                        return true;
                     }
                 else
                     {
@@ -135,6 +173,8 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
                     if (endpoint->gN < FLT_MAX)
                     {
                         //TODO: terminate and return path and write file
+
+                         return true;
                     }
                 else
                     {
@@ -145,31 +185,58 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
             }
         }
     }
-
+return false;
 }
 
 //TODO: replace 1.0 with those 5 heuristic functions
 float IntegretedHeuristics::calHn(node *cur, node *des, float weight)
 {
-    return weight * 1.0;
+    //return weight * 1.0;
+    float x1=cur->x,x2=des->x;
+    float y1=cur->y,y2=des->y;
+    float res=(std::abs(x1-x2)+std::abs(y1-y2));
+    res=res*0.25;
+    return weight * res;//Manhattan distance with highway
 }
 
 float IntegretedHeuristics::calHn1(node *cur, node *des, float weight)
 {
-    return weight * 1.0;
+    float x1=cur->x,x2=des->x;
+    float y1=cur->y,y2=des->y;
+    float res=(std::abs(x1-x2)+std::abs(y1-y2));
+
+    return weight * res;//Manhattan distance
 }
 
 float IntegretedHeuristics::calHn2(node *cur, node *des, float weight)
 {
-    return weight * 1.0;
+    float x1=cur->x,x2=des->x;
+    float y1=cur->y,y2=des->y;
+    float d= std::min(std::abs(x2 - x1), std::abs(y2 - y1));
+    float s=std::abs(x1-x2)+std::abs(y1-y2);
+    float du=std::sqrt(2);
+     float su=1;
+    float res=du*d+su*(s-2*d);
+    return weight * res;//diagonal distance
 }
 
 float IntegretedHeuristics::calHn3(node *cur, node *des, float weight)
 {
-    return weight * 1.0;
+    float x1=cur->x,x2=des->x;
+    float y1=cur->y,y2=des->y;
+    float d= std::min(std::abs(x2 - x1), std::abs(y2 - y1));
+    float s=std::abs(x1-x2)+std::abs(y1-y2);
+    float du=std::sqrt(2);
+     float su=0.25;
+    float res=du*d+su*(s-2*d);
+    return weight * res;//diagonal distance with highway
 }
 
 float IntegretedHeuristics::calHn4(node *cur, node *des, float weight)
 {
-    return weight * 1.0;
+
+    float x1=cur->x,x2=des->x;
+    float y1=cur->y,y2=des->y;
+    float res=std::sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+    return weight * res;//Euclidean distance
 }
