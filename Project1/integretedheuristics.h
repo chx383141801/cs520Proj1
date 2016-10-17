@@ -19,7 +19,6 @@ public:
     float Key(node *s, node *endpoint, int i, float weight);
     void expandState(node &s, node *endpoint, int i, float weight1, float weight2);
 
-    bool readMap(std::string path);
     float calHn(node *cur, node *des, float weight);
     float calHn1(node *cur, node *des, float weight);
     float calHn2(node *cur, node *des, float weight);

@@ -7,19 +7,22 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
+#include <set>
+
 SequentialHeuristics::SequentialHeuristics()
 {
-    for (int i = 0; i < 120; i++)
+ /*   for (int i = 0; i < 120; i++)
     {
         for (int j = 0; j < 160 ;j++)
         {
-            array[i][j].fN=array[i][j].gN=array[i][j].hN=FLT_MAX;
+             array[i][j].fN=array[i][j].gN=array[i][j].hN=FLT_MAX;
              for (int k = 0; k < 160 ;k++){
              array[i][j].f[k]=array[i][j].g[k]=array[i][j].h[k]=FLT_MAX;
-             bp[k]=nullptr;
+             array[i][j].bp[k]=nullptr;
              }
         }
-    }
+    }*/
 }
 
 std::vector <node*> SequentialHeuristics::Succ(node &s)
@@ -28,16 +31,94 @@ std::vector <node*> SequentialHeuristics::Succ(node &s)
     int y = s.y;
     std::vector <node *> ret;
 
-    if (x-1 < 0 || y+1 > 159)
+    if (x-1 < 0 || y+1 > 159 || y-1 < 0 || x+1 > 119)
         return ret;
-
-    for (int i = 0; i < 3; i++)
+    if (x-1 < 0 && y-1 < 0)
     {
-        ret.push_back(&array[x-1+i][y-1]);
-        ret.push_back(&array[x-1+i][y+1]);
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x+i][y+1]);
+        }
+        ret.push_back(&array[x+1][y]);
     }
-    ret.push_back(&array[x-1][y]);
-    ret.push_back(&array[x+1][y]);
+    else if (x-1 < 0 && y+1 > 159)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x+i][y-1]);
+        }
+        ret.push_back(&array[x+1][y]);
+    }
+    else if (x-1 < 0 && y-1 >= 0 && y + 1 <=159)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x+i][y+1]);
+            ret.push_back(&array[x+i][y-1]);
+        }
+        ret.push_back(&array[x+1][y]);
+    }
+    else if (y-1 < 0 && x+1 > 119)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x-i][y+1]);
+        }
+        ret.push_back(&array[x-1][y]);
+    }
+    else if (y-1 < 0 && x+1 <= 119 && x-1 >= 0)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x+1][y+i]);
+            ret.push_back(&array[x-1][y+i]);
+        }
+        ret.push_back(&array[x][y+1]);
+    }
+    else if (y+1 > 159 && x+1 > 119)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x-i][y-1]);
+        }
+        ret.push_back(&array[x-1][y]);
+    }
+    else if (x+1 > 159 && y+1 <= 159 && y-1 >= 0)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x-i][y-1]);
+            ret.push_back(&array[x-i][y+1]);
+        }
+        ret.push_back(&array[x-1][y]);
+    }
+    else if (y+1 > 159 && x+1 <= 119 && x-1 >= 0)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x+1][y-i]);
+            ret.push_back(&array[x-1][y-i]);
+        }
+        ret.push_back(&array[x][y-1]);
+    }
+    else if (x-1 < 0 && y+1 > 159)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            ret.push_back(&array[x+i][y-1]);
+        }
+        ret.push_back(&array[x+1][y]);
+    }
+    else
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            ret.push_back(&array[x-1+i][y-1]);
+            ret.push_back(&array[x-1+i][y+1]);
+        }
+        ret.push_back(&array[x-1][y]);
+        ret.push_back(&array[x+1][y]);
+    }
     return ret;
 }
 
@@ -120,69 +201,78 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
             if (open[i].peek().f[i] <= weight2 * open[0].peek().f[0])
             {
                 if (endpoint->g[i] <= open[i].peek().f[i])
+                {
                     if (endpoint->g[i] < FLT_MAX)
                     {
                         //TODO: terminate and return path and write file
                         node* temp = endpoint;
-                        std::ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");//save the path to file
+                        std::ofstream out(path);//save the path to file
+                        //std::string info_path = path.substr(0,path.find(".txt"));
+                        //info_path += "_info.txt";
+                        //std::ofstream out_info(info_path);
 
                         int path_len_nodes=1;
                         int path_len_distance;
                         int expanded_nodes=0;
 
-                         path_len_distance=temp->g[i];
-                        if (out.is_open()) out <<temp->g[i]<< "\n";
+                        path_len_distance=temp->g[i];
+                        if (out.is_open())
+                            out <<temp->g[i]<< "\n";
 
-                        while (temp->parent != temp) {
-                //		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
+                        while (temp->parent != temp)
+                        {
+                            //		cout << temp->x << "," << temp->y << "," << temp->weight << "," << temp->gN << endl;
                             if (out.is_open())
                             {
                                 out <<"("<< temp->x <<","<< temp->y << ")"<< "," << temp->weight <<"\n";
-
 
                             }
                             temp = temp->parent;
                             path_len_nodes++;
                         }
                         out << "(" << temp->x << "," << temp->y << ")" << "," << temp->weight << "\n";
-            //			cout << temp->x << "," << temp->y << "," <<temp->weight<<","<< temp->gN << endl;
-            //            cout<< temp->gN << endl;
-            //            cout << "succcccccccc";
+
                         out.close();
 
-
-                        std::ofstream data("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/data.txt", std::ios::app);//save relevant data to file
-                       for (int ii=0;ii<5;ii++){
+                        std::string data_path = path.substr(0,path.find(".txt"));
+                        data_path += "_data.txt";
+                        std::ofstream data(data_path, std::ios::app);//save relevant data to file
+                        for (int ii=0;ii<5;ii++)
+                        {
                             expanded_nodes+=closed[ii].size();
-                       }
+                        }
 
-                        if (data.is_open()) out <<temp->g[i]<< "\n";
-                        data<<path_len_distance<<","<<path_len_nodes<<","<<expanded_nodes<<"\n";
-
-
-                         return true;
+                        if (data.is_open())
+                        {
+                            data <<temp->g[i]<< "\n"; //modified: out -> data;
+                            data<<path_len_distance<<","<<path_len_nodes<<","<<expanded_nodes<<"\n";
+                        }
+                        data.close();
+                        return true;
                     }
+                }
                 else
-                    {
-                        node s = open[i].pop();
-                        expandState(s, endpoint, i, weight1);
-                        closed[i].insert(s);
-                    }
+                {
+                    node s = open[i].pop();
+                    expandState(s, endpoint, i, weight1);
+                    closed[i].insert(s);
+                }
             }
             else
             {
                 if (endpoint->g[0] <= open[0].peek().f[0])
+                {
                     if (endpoint->g[0] < FLT_MAX)
                     {
                         //TODO: terminate and return path and write file
                         node* temp = endpoint;
-                        std::ofstream out("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/path.txt");//save the path to file
+                        std::ofstream out(path);//save the path to file
 
                         int path_len_nodes=1;
                         int path_len_distance;
                         int expanded_nodes;
 
-                         path_len_distance=temp->g[0];
+                        path_len_distance=temp->g[0];
                         if (out.is_open()) out <<temp->g[0]<< "\n";
 
                         while (temp->parent != temp) {
@@ -202,15 +292,21 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
             //            cout << "succcccccccc";
                         out.close();
 
-
-                        std::ofstream data("C:/Users/Yi Dang/Documents/GitHub/cs520Proj1/Project1/data.txt", std::ios::app);//save relevant data to file
+                        std::string data_path = path.substr(0,path.find(".txt"));
+                        data_path += "_data.txt";
+                        std::ofstream data(data_path, std::ios::app);//save relevant data to file
                         for (int ii=0;ii<5;ii++){
                              expanded_nodes+=closed[ii].size();
                         }
-                        if (data.is_open()) out <<temp->g[0]<< "\n";
-                        data<<path_len_distance<<","<<path_len_nodes<<","<<expanded_nodes<<"\n";
-                         return true;
+                        if (data.is_open())
+                        {
+                            data << temp->g[0]<< "\n";
+                            data << path_len_distance << "," << path_len_nodes << "," << expanded_nodes << "\n";
+                        }
+                        data.close();
+                        return true;
                     }
+                }
                 else
                     {
                         node s = open[0].pop();
@@ -222,87 +318,6 @@ bool SequentialHeuristics::findPath(std::string path, float weight1, float weigh
     }
 return false;
 }
-
-bool SequentialHeuristics::readMap(std::string path)
-{
-//	cout << "read start" << endl;
-    std::ifstream in(path);
-
-    if (!in)
-    {
-        std::cerr << "some errors happened";
-        in.close();
-        return false;
-    }
-    std::string str;
-
-    int countr = 0;//row
-    while (std::getline(in, str))
-    {
-        if (countr==0|| countr == 1)
-        {
-            int x, y;
-            int spps = str.find(" ");
-            std::stringstream ss;
-            ss<<str.substr(0, spps);
-            ss >> x;
-            ss.clear();
-            ss << str.substr(spps+1, str.size()-1);
-            ss >> y;
-            if (countr == 0) {
-                sttpt.first = x;
-                sttpt.second = y;
-            }
-            else {
-                ndpt.first = x;
-                ndpt.second = y;
-            }
-        }
-        if (countr++ > 10) {
-
-            int countc = 0;//column
-
-        //	cout << str << endl;
-
-            for (int i = 0; i<str.size() ; i++) {
-
-
-                char ith = str.at(i);
-                if (ith == ',') continue;
-            //	cout << countr - 11 << "," << countc << endl;
-                if (countr - 12 >= 120|| countc >= 160) break;
-                array[countr - 12][countc++].weight = ith;
-                if (ith == 'a' || ith == 'b') i++;
-
-            //	for (int j = 0; j < countc; j++) cout << ith;
-
-                //array[count - 11][i].weight = str.at(i);
-
-            }
-        //	for (int j = 0; j < countc; j++) cout << array[countr - 11][j].weight;
-        //	cout << endl;
-        }
-
-    }
-    for (int i = 0; i < 120; i++)
-    {
-        for (int j = 0; j < 160; j++)
-        {
-        //	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
-       // std::cout <<  array[i][j].weight;
-//std::cout << "123123123";
-        }
-//		cout << endl;
-    }
-
-//      std::cout << "123123123";
-
-    //cout << "read end" << endl;
-    in.close();
-
-    return true;
-}
-
 
 //TODO: replace 1.0 with those 5 heuristic functions
 float SequentialHeuristics::calHn(node *cur, node *des, float weight)

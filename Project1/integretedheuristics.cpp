@@ -7,17 +7,17 @@
 //#include <math>
 IntegretedHeuristics::IntegretedHeuristics()
 {
-    for (int i = 0; i < 120; i++)
+/*    for (int i = 0; i < 120; i++)
     {
         for (int j = 0; j < 160 ;j++)
         {
             array[i][j].fN=array[i][j].gN=array[i][j].hN=FLT_MAX;
              for (int k = 0; k < 160 ;k++){
              array[i][j].f[k]=array[i][j].g[k]=array[i][j].h[k]=FLT_MAX;
-             bp[k]=nullptr;
+             array[i][j].bp[k]=nullptr;
              }
         }
-    }
+    }*/
 }
 
 
@@ -132,6 +132,7 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
             if (open[i].peek().f[i] <= weight2 * open[0].peek().f[0])
             {
                 if (endpoint->gN <= open[i].peek().f[i])
+                {
                     if (endpoint->gN < FLT_MAX)
                     {
                         //TODO: terminate and return path and write file
@@ -171,6 +172,7 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
 
                         return true;
                     }
+                }
                 else
                     {
                         node s = open[i].pop();
@@ -181,106 +183,25 @@ bool IntegretedHeuristics::findPath(std::string path, float weight1, float weigh
             else
             {
                 if (endpoint->gN <= open[0].peek().f[0])
+                {
                     if (endpoint->gN < FLT_MAX)
                     {
                         //TODO: terminate and return path and write file
 
                          return true;
                     }
+                }
                 else
-                    {
-                        node s = open[0].pop();
-                        expandState(s, endpoint, 0, weight1, weight2);
-                        closed_anchor.insert(s);
-                    }
+                {
+                    node s = open[0].pop();
+                    expandState(s, endpoint, 0, weight1, weight2);
+                    closed_anchor.insert(s);
+                }
             }
         }
     }
 return false;
 }
-
-
-bool IntegretedHeuristics::readMap(std::string path)
-{
-//	cout << "read start" << endl;
-    std::ifstream in(path);
-
-    if (!in)
-    {
-        std::cerr << "some errors happened";
-        in.close();
-        return false;
-    }
-    std::string str;
-
-    int countr = 0;//row
-    while (std::getline(in, str))
-    {
-        if (countr==0|| countr == 1)
-        {
-            int x, y;
-            int spps = str.find(" ");
-            std::stringstream ss;
-            ss<<str.substr(0, spps);
-            ss >> x;
-            ss.clear();
-            ss << str.substr(spps+1, str.size()-1);
-            ss >> y;
-            if (countr == 0) {
-                sttpt.first = x;
-                sttpt.second = y;
-            }
-            else {
-                ndpt.first = x;
-                ndpt.second = y;
-            }
-        }
-        if (countr++ > 10) {
-
-            int countc = 0;//column
-
-        //	cout << str << endl;
-
-            for (int i = 0; i<str.size() ; i++) {
-
-
-                char ith = str.at(i);
-                if (ith == ',') continue;
-            //	cout << countr - 11 << "," << countc << endl;
-                if (countr - 12 >= 120|| countc >= 160) break;
-                array[countr - 12][countc++].weight = ith;
-                if (ith == 'a' || ith == 'b') i++;
-
-            //	for (int j = 0; j < countc; j++) cout << ith;
-
-                //array[count - 11][i].weight = str.at(i);
-
-            }
-        //	for (int j = 0; j < countc; j++) cout << array[countr - 11][j].weight;
-        //	cout << endl;
-        }
-
-    }
-    for (int i = 0; i < 120; i++)
-    {
-        for (int j = 0; j < 160; j++)
-        {
-        //	cout << "("<< array[i][j].x<<","<< array[i][j].y<<")";
-       // std::cout <<  array[i][j].weight;
-//std::cout << "123123123";
-        }
-//		cout << endl;
-    }
-
-//      std::cout << "123123123";
-
-    //cout << "read end" << endl;
-    in.close();
-
-    return true;
-}
-
-
 
 //TODO: replace 1.0 with those 5 heuristic functions
 float IntegretedHeuristics::calHn(node *cur, node *des, float weight)

@@ -19,6 +19,12 @@
 			{
 				array[i][j].x = i;
 				array[i][j].y = j;
+                array[i][j].fN=array[i][j].gN=array[i][j].hN=FLT_MAX;
+                for (int k = 0; k < 160 ;k++)
+                {
+                    array[i][j].f[k]=array[i][j].g[k]=array[i][j].h[k]=FLT_MAX;
+                    array[i][j].bp[k]=nullptr;
+                }
 			}
 		}
 	}

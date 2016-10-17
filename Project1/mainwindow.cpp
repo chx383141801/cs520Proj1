@@ -3,6 +3,8 @@
 #include "map.h"
 #include "node.h"
 #include "weightedastar.h"
+#include "sequentialheuristics.h"
+#include "integretedheuristics.h"
 #include "pathdisplay.h"
 #include "doastar.h"
 #include <QGraphicsScene>
@@ -201,4 +203,75 @@ void MainWindow::on_bt_get_report_clicked()
 
 
 
+}
+
+void MainWindow::on_bt_Seq_Heuristic_clicked()
+{
+    double weight1, weight2;
+    if (ui->le_weight_1->text() == "")
+        weight1 = 1;
+    else
+    {
+        std::string recv = ui->le_weight_1->text().toStdString();
+        weight1 = std::stod(recv);
+    }
+
+    if (ui->le_weight_2->text() == "")
+        weight2 = 1;
+    else
+    {
+        std::string recv = ui->le_weight_2->text().toStdString();
+        weight2 = std::stod(recv);
+    }
+
+    std::string p_map = ui->le_print_map_name->text().toStdString();
+    std::string p_path = p_map.substr(0, p_map.find("."));
+    p_path += "_SeqHeu_";
+    p_path += ui->le_weight_1->text().toStdString();
+    p_path += ".txt";
+    QGraphicsScene * scene = new QGraphicsScene(0,0,BOARDER_WIDTH,BOARDER_HEIGHT);
+
+    SequentialHeuristics *ds = new SequentialHeuristics();
+    //std::cout<<"123";
+    ds->readMap(p_map);
+    QTime time;
+    time.start();
+   // std::cout<<"123";
+    ds->findPath(p_path, weight1, weight2);
+    float timeCost = time.elapsed();
+
+    map *m = new map();
+    double cost;
+    int ret = m->mapAndPathLoader(p_map, p_path, scene, cost);
+    std::string titleString = "cost:";
+    titleString += std::to_string(cost);
+    titleString += "  ";
+    titleString += "time:";
+    titleString += std::to_string(timeCost);
+    titleString += "ms";
+
+    if (ret == 1)
+    {
+        ui->label->setText("Path file not found.");
+        ui->label->update();
+    }
+    else if (ret == 0)
+    {
+
+        QGraphicsView * view = new QGraphicsView(scene);
+        view->setWindowTitle(QString::fromStdString(titleString));
+        view->setFixedSize(BOARDER_WIDTH,BOARDER_HEIGHT);
+        view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        view->show();
+        ui->label->setText("Path Found");
+        ui->label->repaint();
+        //QMouseEvent::pos();
+    }
+
+    PathDisplay *pd = new PathDisplay();
+    pd->show();
+    //this->setCentralWidget(view);
+    delete m;
+    delete ds;
 }
