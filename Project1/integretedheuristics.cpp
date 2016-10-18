@@ -22,7 +22,7 @@ std::vector <node*> IntegretedHeuristics::Succ(node &s)
              if (i == 0 && j == 0) continue;
               int x = s.x + i;
               int y = s.y + j;
-               std::cout<<"x"<<x<<"y"<<y<<std::endl;
+          //     std::cout<<"x"<<x<<"y"<<y<<std::endl;
 
             if (x >= 0 && x < 120 && y >= 0 && y < 160){
                 if (array[x][y].weight != 0)

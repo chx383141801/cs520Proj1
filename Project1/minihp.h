@@ -23,7 +23,7 @@ public:
 
     std::vector<node*> queue1;
     void insert(node *t1, int i);
-    bool contains(node *t1,int ii);
+    bool contains(node *t1, int ii);
     void erase(node *t1, int ii);
     //void clear();
     int size(int i);
@@ -100,6 +100,7 @@ inline bool minihp<T>::contains(T t1)
 {
     for (std::vector<T>::iterator i = queue.begin(); i != queue.end(); ++i)
     {
+
         if (*i == t1) return true;
     }
     return false;
@@ -109,15 +110,19 @@ template<typename T>
 inline bool minihp<T>::contains(node *t1, int ii)
 {
 
- //   for (std::vector<node>::iterator i = queue1.begin(); i != queue1.end(); ++i)
+    //   for (std::vector<node>::iterator i = queue1.begin(); i != queue1.end(); ++i)
     {
- //       if (*i->f[ii]== t1.f[ii]) return true;
+        //       if (*i->f[ii]== t1.f[ii]) return true;
     }
 
-     for (int i=0;i<queue1.size();i++){
-         if(queue1[i]==t1) return true;
+    for (int i = 0; i<queue1.size(); i++) {
+        node *a=queue1[i];
+        node *b=t1;
+        if(a->x==b->x&&a->y==b->y)
+     //   if (queue1[i] == t1)
+            return true;
 
-     }
+    }
     return false;
 }
 
@@ -171,9 +176,20 @@ inline void minihp<T>::erase(T t1)
 template<typename T>
 inline void minihp<T>::erase(node *t1, int ii)
 {
+    if (t1->x==28&&t1->y==81){
+        std::cout<<"here"<<std::endl;
+        std::cout<<queue1.size()<<std::endl;
+        std::cout<<"contains(t1,0)"<<contains(t1,0)<<std::endl;
+    }
+
+
+
     for (int i = 0; i < queue1.size(); i++)
     {
-        if (queue1[i]->f[ii] == t1->f[ii]) {
+        node *a=queue1[i];
+
+
+        if (a->x == t1->x&&a->y==t1->y) {
             queue1[i] = queue1[queue1.size() - 1];
             queue1.erase(queue1.begin() + (queue1.size() - 1));
         }
@@ -212,12 +228,23 @@ inline void minihp<T>::erase(node *t1, int ii)
             }
         }
     }
+
+
+    if (t1->x==28&&t1->y==81){
+        std::cout<<"here"<<std::endl;
+        std::cout<<queue1.size()<<std::endl;
+         std::cout<<"after"<<std::endl;
+          std::cout<<"contains(t1,0)"<<contains(t1,0)<<std::endl;
+        std::cout<<std::endl;
+    }
+
 }
 
 template<typename T>
 inline void minihp<T>::clear()
 {
     queue.clear();
+    queue1.clear();
 }
 
 template<typename T>
@@ -232,6 +259,11 @@ inline int minihp<T>::size()
 template<typename T>
 inline int minihp<T>::size(int i)
 {
+
+    for (int i = 0; i < queue1.size(); i++)
+    {
+        //cout << queue1[i]->f[0] << endl;
+    }
     return queue1.size();
 }
 
@@ -243,15 +275,21 @@ inline node *minihp<T>::pop(int i)
 
     if (queue1.size() == 0) {
         std::cout << "cannot pop" << std::endl;
-        node *res;
+        node *res=NULL;
         return  res;
     }
     node *res = queue1[0];
-    queue1[0] = queue1[queue1.size() - 1];
+//	queue1[0] = queue1[queue1.size() - 1];
 
     //std::cout<<"erase b"<<queue1.size();
-    minihp<T>::erase(queue1[queue1.size() - 1],i);
-// std::cout<<"erase a"<<queue1.size();
+    //minihp<T>::erase(queue1[queue1.size() - 1], i);
+     //   std::cout<<contains(res,0)<<"resresres"<<std::endl;
+    minihp<T>::erase(queue1[0], i);
+
+   while(contains(res,i)){
+       erase(res,i);
+   }
+    // std::cout<<"erase a"<<queue1.size();
     return res;
 }
 
